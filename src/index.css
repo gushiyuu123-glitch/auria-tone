@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* UI Fonts：ロゴと競合しないサンセリフのみ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap");
+
+:root{
+  /* === Auria Tone / Logo-driven Dark ===
+     主役：ロゴ（温度ある白）
+     署名：rose（波線の粘土色）
+     UI：冷たすぎないグレー
+  */
+
+  /* text / highlight */
+  --c-ivory: 240 232 223;   /* warm off-white (#F0E8DF) = ロゴ白の温度 */
+  --c-bone: 214 206 197;    /* soft warm gray (#D6CEC5) */
+  --c-ink: 203 195 187;     /* secondary text */
+  --c-muted: 168 162 156;   /* tertiary */
+
+  /* accents */
+  --c-rose: 160 110 89;     /* clay signature (#A06E59) */
+  --c-accent: 123 132 136;  /* steel hint (#7B8488) */
+
+  /* base / surfaces */
+  --c-charcoal: 12 11 10;   /* near-black */
+  --c-dark: 9 8 7;          /* deeper */
+  --c-surface: 20 18 16;    /* panels, rails on dark */
+  --c-paper: 246 243 238;   /* light paper if needed */
+
+  /* lines */
+  --c-line: 78 74 70;       /* subtle line on dark */
+
+  /* typography: UI only (logo is SVG) */
+  --font-ui: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* smoothing */
+  color-scheme: dark;
+}
+
+html, body{
+  height: 100%;
+  font-family: var(--font-ui);
+  background:
+    radial-gradient(1200px 680px at 22% 18%, rgb(255 255 255 / 0.06), transparent 60%),
+    radial-gradient(900px 560px at 72% 36%, rgb(160 110 89 / 0.10), transparent 62%),
+    linear-gradient(180deg, rgb(0 0 0 / 0.88) 0%, rgb(0 0 0 / 0.78) 40%, rgb(0 0 0 / 0.92) 100%);
+  color: rgb(var(--c-ivory));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 余計な“Webっぽさ”を消す */
+a{
+  color: inherit;
+  text-decoration: none;
+}
+
+/* UIの基準線（必要なら） */
+hr{
+  border: 0;
+  height: 1px;
+  background: rgb(var(--c-line) / 0.55);
+}
+
+/* 選択色は rose を薄く */
+::selection{
+  background: rgb(var(--c-rose) / 0.22);
+  color: rgb(var(--c-ivory));
+}
+
+/* Tailwind baseで上書きしたい時のための最小コンポーネント */
+@layer components{
+  /* 小さいUIラベル：ロゴと競合しない字間 */
+  .ui-label{
+    @apply font-ui text-ink/80 tracking-ui text-[12px] leading-[1.6];
+  }
+
+  /* 小見出し：サンセリフのまま密度を上げる */
+  .ui-title{
+    @apply font-ui text-ivory tracking-uiWide text-[14px] leading-[1.4];
+  }
+
+  /* 線・区切り */
+  .ui-rule{
+    @apply bg-line/55 h-px;
+  }
+}

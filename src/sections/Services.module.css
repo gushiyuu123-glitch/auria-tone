@@ -1,0 +1,248 @@
+/* src/sections/Services.module.css */
+
+.section{
+  padding-top: clamp(96px, 14vh, 170px);
+  padding-bottom: clamp(110px, 14vh, 190px);
+  background: transparent;
+  color: rgb(var(--c-charcoal, 20 20 20));
+
+  /* Role/Promiseと統一 */
+  --dur: 820ms;
+  --stagger: 180ms;
+  --after: 120ms;
+}
+
+.wrap{
+  width: min(1680px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 3.4vw, 84px);
+}
+
+/* 左ガター | 左テキスト | 右ビジュアル（Roleと同じ文法） */
+.grid{
+  display: grid;
+  grid-template-columns:
+    clamp(18px, 3.2vw, 72px)
+    minmax(0, 1.12fr)
+    minmax(0, 0.88fr);
+  column-gap: clamp(32px, 3.2vw, 72px);
+  align-items: start;
+}
+
+.left{ grid-column: 2; }
+
+.right{
+  grid-column: 3;
+  justify-self: end;
+  margin-top: clamp(92px, 8.8vh, 220px);
+}
+
+/* ==== reveal（統一） ==== */
+.stagger{
+  opacity: 0.001;
+  transform: translateY(12px) scale(0.995);
+  transition:
+    opacity var(--dur) cubic-bezier(.22,.61,.36,1),
+    transform var(--dur) cubic-bezier(.22,.61,.36,1);
+  transition-delay: calc(var(--after) + (var(--i) * var(--stagger)));
+}
+
+.section:not(.in) .stagger{ will-change: transform, opacity; }
+
+.in .stagger{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+.reduce .stagger{
+  transition: none;
+  transition-delay: 0ms;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ==== kicker ==== */
+.kicker{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+.kicker::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width: 52px;
+  height: 1px;
+  background: rgba(20,20,20,0.14);
+}
+.kickerEn{
+  letter-spacing: 0.22em;
+  font-weight: 610;
+  font-size: 13px;
+  opacity: 0.72;
+}
+.kickerDash{
+  opacity: 0.30;
+  transform: translateY(-0.5px);
+}
+.kickerJp{
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  opacity: 0.68;
+  transform: translateY(1px);
+}
+
+/* ==== text ==== */
+.title{
+  margin: 0;
+  font-size: clamp(22px, 2.35vw, 34px);
+  line-height: 1.28;
+  letter-spacing: 0.02em;
+  font-weight: 560;
+  opacity: 0.86;
+  max-width: 26ch;
+}
+
+.text{ margin-top: 18px; }
+
+/* 読ませる箇所：サイズを上げる（opacityはいじらない） */
+.line{
+  margin: 0;
+  font-size: 16px;        /* ←重要：14→16 */
+  line-height: 2.0;
+  letter-spacing: 0.03em;
+  opacity: 0.78;
+  max-width: 64ch;
+}
+.line + .line{ margin-top: 14px; }
+
+/* ==== right tag ==== */
+.tag{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 12px;
+  letter-spacing: 0.20em;
+  font-size: 11px;
+  opacity: 0.44;
+}
+.tagText{ white-space: nowrap; }
+.tagRule{
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(20,20,20,0.18), rgba(20,20,20,0));
+  transform: translateY(-2px);
+}
+
+/* ==== image ==== */
+.figure{ margin: 0; }
+
+.frame{
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+
+  width: min(760px, 38vw);
+  aspect-ratio: 5 / 4;
+
+  border: 1px solid rgba(20,20,20,0.055);
+  background: rgba(20,20,20,0.015);
+}
+
+/* 下地（画像が死んでも成立） */
+.imgFallback{
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(980px 520px at 20% 40%, rgba(var(--c-bone), 0.70), rgba(var(--c-ivory), 0.92)),
+    linear-gradient(180deg, rgba(var(--c-bone), 0.55), rgba(var(--c-ivory), 0.96));
+}
+
+/* 膜（blur無し） */
+.frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.58) 0%,
+    rgba(255,255,255,0.18) 72%,
+    rgba(255,255,255,0.08) 100%
+  );
+}
+
+.img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+
+  z-index: 0;
+  transform: scale(1.0);
+  opacity: 0.86;
+  filter: saturate(0.90) contrast(0.92) brightness(1.02);
+}
+
+.imgBroken{
+  opacity: 0 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* srOnly */
+.srOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==== SP ==== */
+@media (max-width: 980px){
+  .grid{
+    grid-template-columns: 1fr;
+    row-gap: 26px;
+  }
+  .left{ grid-column: 1; }
+
+  .right{
+    grid-column: 1;
+    justify-self: start;
+    margin-top: 22px;
+  }
+
+  .frame{
+    width: min(740px, 100%);
+    aspect-ratio: 16 / 10;
+  }
+
+  /* 16pxに上げた分だけ、SPは少し締める */
+  .line{ line-height: 1.92; }
+}
+/* 2行の改行を“意図”として固定する */
+.titleLine{
+  display: block;
+  white-space: nowrap; /* PC/タブレットは必ずこの2行 */
+}
+
+/* SPははみ出し防止で折り返し許可 */
+@media (max-width: 980px){
+  .titleLine{
+    white-space: normal;
+  }
+}

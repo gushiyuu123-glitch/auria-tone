@@ -1,0 +1,440 @@
+/* Hero.module.css */
+
+/* ===== 基礎 ===== */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+
+  /* position knobs */
+  --railW:    clamp(300px, 28vw, 392px);
+  --navRight: clamp(56px, 5vw, 300px);
+  --navTop:   clamp(160px, 28vh, 300px);
+
+  /* logo knobs */
+  --logoTop:  calc(clamp(64px, 8.5vh, 118px) + 40px);
+  --logoLeft: calc(clamp(262px, 22vw, 402px) + 100px);
+
+  background: rgb(var(--c-ivory));
+}
+
+/* a11y */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stage {
+  position: relative;
+  height: 100svh;
+}
+
+/* ===== 写真レイヤー ===== */
+
+.left {
+  position: absolute;
+  inset: 0;
+}
+
+/* 下地は常に置く（imgが落ちても画面が破綻しない） */
+.heroFallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 700px at 18% 45%, rgba(var(--c-bone), 0.9), rgba(var(--c-ivory), 1)),
+    linear-gradient(180deg, rgba(var(--c-bone), 0.9), rgba(var(--c-ivory), 1));
+}
+
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  filter: brightness(1.05) saturate(0.96) contrast(1.02);
+  transform-origin: 50% 48%;
+
+  transition: transform 1.05s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity    0.9s  ease;
+
+  /* scrollでもtransformを使うのでここは残す */
+  will-change: transform, opacity;
+}
+
+/* reveal */
+.isIn  .heroPhoto { transform: scale(1);     opacity: 1;     }
+.hero:not(.isIn) .heroPhoto { transform: scale(1.012); opacity: 0.001; }
+
+/* 画像が完全に落ちた時は“写真だけ”消して下地に逃がす */
+.heroPhotoBroken {
+  opacity: 0 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ===== オーバーレイ ===== */
+
+/* 暗膜 */
+.luxeDarkGlaze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(920px 640px at 68% 30%, rgba(0,0,0,0.46), rgba(0,0,0,0) 64%),
+    radial-gradient(980px 720px at 86% 76%, rgba(0,0,0,0.52), rgba(0,0,0,0) 62%),
+    radial-gradient(520px 420px at 14% 18%, rgba(0,0,0,0.38), rgba(0,0,0,0) 70%),
+    radial-gradient(480px 160px at 62% 42%, rgba(0,0,0,0.32), rgba(0,0,0,0) 72%),
+    linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 54%, rgba(0,0,0,0.34) 100%);
+  opacity: 0.54;
+  will-change: opacity;
+}
+
+/* 光膜 */
+.heroVeil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 42% 26%, rgba(255,255,255,0.10), rgba(255,255,255,0) 62%),
+    radial-gradient(760px 520px at 20% 78%, rgba(255,255,255,0.07), rgba(255,255,255,0) 62%);
+  mix-blend-mode: screen;
+  opacity: 0.52;
+}
+
+/* 左下ラベル */
+.microObj {
+  position: absolute;
+  left:   clamp(22px, 2.2vw, 34px);
+  bottom: clamp(16px, 2.1vh, 28px);
+  z-index: 5;
+  pointer-events: none;
+  color: rgba(246, 243, 238, 0.40);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.microDot {
+  display: inline-block;
+  transform: translateY(-1px);
+  opacity: 0.55;
+}
+
+/* ===== 右レール ===== */
+
+.rail {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: var(--railW);
+  z-index: 6;
+  pointer-events: auto;
+  background:
+    radial-gradient(760px 560px at 26% 18%, rgba(255,255,255,0.05), rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, rgba(0,0,0,0.40), rgba(0,0,0,0.58));
+  border-left: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(3px);
+}
+
+/* 微テクスチャ */
+.rail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.040;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* 縦の深度 */
+.rail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,0.028)  0px,
+    rgba(255,255,255,0.028)  1px,
+    rgba(255,255,255,0)     18px,
+    rgba(255,255,255,0)     34px
+  );
+  opacity: 0.20;
+}
+
+/* ===== ナビゲーション ===== */
+
+.nav {
+  position: absolute;
+  right: var(--navRight);
+  top:   var(--navTop);
+  width: calc(var(--railW) - (var(--navRight) * 1.45));
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.1vh, 26px);
+}
+
+/* アイテム共通 */
+.navItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  align-items: center;
+  column-gap: 18px;
+  --navLine: 1;
+}
+
+/* 左の罫線 */
+.navItem::before {
+  content: "";
+  height: 1px;
+  background: rgba(255,255,255,0.10);
+  grid-column: 1;
+  transform: translateY(-50%) scaleX(var(--navLine, 1));
+  transform-origin: 100% 50%;
+}
+
+.navItemActive::before {
+  background: rgba(var(--c-rose), 0.70);
+}
+
+/* リンク */
+.navLink {
+  grid-column: 2;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-left: 6px;
+  text-decoration: none;
+  color: rgba(246,243,238,0.78);
+  font-family: var(--font-sans);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  outline: none;
+}
+
+@media (hover: hover) {
+  .navLink:hover { color: rgba(246,243,238,0.92); }
+}
+
+.navLink:focus-visible {
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.55);
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin-left: -10px;
+}
+
+/* EN（主） */
+.navEn {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* JP（補助） */
+.navJp {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(246,243,238,0.52);
+  transform: translateY(1px);
+}
+
+/* active 文字色 */
+.navItemActive .navEn { color: rgba(246,243,238,0.94); }
+.navItemActive .navJp { color: rgba(246,243,238,0.66); }
+
+/* ===== CONTACT（下線のみ・左線なし） ===== */
+
+.navItemContact {
+  margin-top: clamp(14px, 2.0vh, 24px);
+}
+
+.navItemContact::before {
+  content: none;
+}
+
+.navItemContact .navEn { color: rgba(246,243,238,0.90); letter-spacing: 0.16em; }
+.navItemContact .navJp { color: rgba(246,243,238,0.56); }
+
+.navItemContactActive .navEn { color: rgba(246,243,238,0.96); }
+.navItemContactActive .navJp { color: rgba(246,243,238,0.66); }
+
+.navItemContact .navLink {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.navItemContact .navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--c-rose) / 0),
+    rgb(var(--c-rose) / 0.66),
+    rgb(var(--c-rose) / 0)
+  );
+  opacity: 0.55;
+  transform: scaleX(0.72);
+  transform-origin: left center;
+  transition: opacity 360ms ease, transform 560ms ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .navItemContact .navLink:hover::after { opacity: 0.90; transform: scaleX(1); }
+}
+
+.navItemContactActive .navLink::after {
+  opacity: 0.90;
+  transform: scaleX(1);
+}
+
+/* ===== ロゴ ===== */
+
+.logoStage {
+  position: absolute;
+  top:  var(--logoTop);
+  left: var(--logoLeft);
+  z-index: 7;
+  pointer-events: none;
+}
+
+.logoBackVeil {
+  position: absolute;
+  inset: -24px -44px -20px -44px;
+  pointer-events: none;
+  background: radial-gradient(
+    72% 86% at 46% 50%,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0) 70%
+  );
+  opacity: 0.70;
+  mask-image: radial-gradient(closest-side at 46% 52%, #000 0%, #000 60%, transparent 100%);
+}
+
+.logoHero {
+  display: block;
+  width: min(720px, 58vw);
+  height: auto;
+  filter:
+    drop-shadow(0 1px 8px rgba(0,0,0,0.28))
+    drop-shadow(0 0 1px rgba(0,0,0,0.15));
+  opacity: 0.98;
+}
+
+.logoFrontVeil {
+  position: absolute;
+  inset: -14px -24px -12px -24px;
+  pointer-events: none;
+  background: radial-gradient(
+    66% 78% at 46% 52%,
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0) 72%
+  );
+  opacity: 0.60;
+  mix-blend-mode: screen;
+}
+
+/* ===== verdict ===== */
+
+.verdict {
+  position: absolute;
+  left:   clamp(22px, 2.2vw, 34px);
+  bottom: calc(clamp(16px, 2.1vh, 28px) + 36px);
+  z-index: 5;
+  margin: 0;
+  pointer-events: none;
+
+  color: rgba(246,243,238,0.88);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 560;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  white-space: nowrap;
+
+  text-shadow:
+    0 2px 18px rgba(0,0,0,0.58),
+    0 0 1px rgba(0,0,0,0.22);
+}
+
+.verdict::before {
+  content: "";
+  position: absolute;
+  inset: -12px -22px -14px -22px;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      70% 86% at 46% 54%,
+      rgba(0,0,0,0.38),
+      rgba(0,0,0,0) 76%
+    );
+  opacity: 0.92;
+
+  -webkit-mask-image: radial-gradient(closest-side at 46% 54%, #000 0%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(closest-side at 46% 54%, #000 0%, #000 62%, transparent 100%);
+}
+
+.verdictChars {
+  display: inline-block;
+}
+
+.verdictChar {
+  display: inline-block;
+  opacity: 0.001;
+  transform: translateY(8px) scale(0.995);
+
+  transition:
+    opacity   680ms cubic-bezier(.22,.61,.36,1),
+    transform 680ms cubic-bezier(.22,.61,.36,1);
+
+  transition-delay: calc(0.72s + (var(--i) * 0.035s));
+}
+
+/* アニメ中だけ will-change を使う */
+.hero:not(.isIn) .verdictChar { will-change: transform, opacity; }
+.isIn .verdictChar { will-change: auto; }
+
+.isIn .verdictChar {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ===== reduced motion ===== */
+
+.reduce .heroPhoto {
+  transition: none;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.reduce .navItem::before {
+  transform: translateY(-50%);
+}
+
+.reduce .verdictChar {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
