@@ -86,3 +86,7 @@ hr{
     @apply bg-line/55 h-px;
   }
 }
+html, body { overflow-x: clip; }
+@supports not (overflow: clip){
+  html, body { overflow-x: hidden; }
+}

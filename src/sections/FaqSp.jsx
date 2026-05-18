@@ -1,5 +1,5 @@
 import RevealSection from "../components/RevealSection";
-import styles from "./Faq.module.css";
+import styles from "./FaqSp.module.css";
 
 const COPY = {
   head: "よくある確認",
@@ -33,11 +33,11 @@ const COPY = {
   foot: "ここにない内容も、そのまま聞いてください",
 };
 
-export default function Faq() {
+export default function FaqSp() {
   let i = 0;
 
   return (
-    <RevealSection id="faq" className={styles.section} aria-labelledby="faq-title">
+    <RevealSection id="faq-sp" className={styles.section} aria-labelledby="faq-title-sp">
       <div className={styles.wrap}>
         <div className={styles.inner}>
           {/* head */}
@@ -51,7 +51,7 @@ export default function Faq() {
               draggable="false"
             />
 
-            <h2 id="faq-title" className={`${styles.head} ${styles.stagger}`} style={{ "--i": i++ }}>
+            <h2 id="faq-title-sp" className={`${styles.head} ${styles.stagger}`} style={{ "--i": i++ }}>
               {COPY.head}
             </h2>
 

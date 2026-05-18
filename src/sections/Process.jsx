@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
+import RevealSection from "../components/RevealSection";
 import styles from "./Process.module.css";
 
 const COPY = {
@@ -74,56 +75,10 @@ function Img({ src, alt, className }) {
 }
 
 export default function Process() {
-  const rootRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [reduce, setReduce] = useState(false);
-
-  useEffect(() => {
-    const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-
-    const apply = () => {
-      const r = !!m?.matches;
-      setReduce(r);
-      if (r) setInView(true);
-    };
-
-    apply();
-
-    const el = rootRef.current;
-    let io;
-
-    if (!m?.matches && el) {
-      io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          setInView(true);
-          io.disconnect();
-        },
-        { threshold: 0.22, rootMargin: "-12% 0px -12% 0px" }
-      );
-      io.observe(el);
-    }
-
-    m?.addEventListener?.("change", apply);
-
-    return () => {
-      io?.disconnect?.();
-      m?.removeEventListener?.("change", apply);
-    };
-  }, []);
-
-  const cls = useMemo(
-    () =>
-      [styles.section, inView ? styles.in : "", reduce ? styles.reduce : ""]
-        .filter(Boolean)
-        .join(" "),
-    [inView, reduce]
-  );
-
   let i = 0;
 
   return (
-    <section ref={rootRef} id="process" className={cls} aria-labelledby="process-title">
+    <RevealSection id="process" className={styles.section} aria-labelledby="process-title">
       <div className={styles.wrap}>
         <div className={styles.grid}>
           {/* LEFT */}
@@ -138,10 +93,11 @@ export default function Process() {
               進め方
             </h2>
 
-        <p className={`${styles.headline} ${styles.stagger}`} style={{ "--i": i++ }}>
-  <span className={styles.headLine}>決める順番が見えると、</span>
-  <span className={styles.headLine}>相談はラクになります。</span>
-</p>
+            <p className={`${styles.headline} ${styles.stagger}`} style={{ "--i": i++ }}>
+              <span className={styles.headLine}>決める順番が見えると、</span>
+              <span className={styles.headLine}>相談はラクになります。</span>
+            </p>
+
             <span className={`${styles.shortRule} ${styles.stagger}`} style={{ "--i": i++ }} aria-hidden="true" />
 
             <div className={styles.lead}>
@@ -164,10 +120,12 @@ export default function Process() {
 
                   <div className={styles.meta}>
                     <div className={styles.no}>{s.no}</div>
+
                     <div className={styles.titleRow}>
                       <p className={styles.title}>{s.title}</p>
                       <span className={styles.miniRule} aria-hidden="true" />
                     </div>
+
                     <p className={styles.desc}>{s.desc}</p>
                   </div>
 
@@ -181,8 +139,7 @@ export default function Process() {
             </ol>
           </aside>
         </div>
-
       </div>
-    </section>
+    </RevealSection>
   );
 }

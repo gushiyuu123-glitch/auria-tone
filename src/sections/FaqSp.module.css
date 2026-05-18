@@ -1,0 +1,217 @@
+.section{
+  padding-top: clamp(86px, 11vh, 132px);
+  padding-bottom: clamp(92px, 12vh, 150px);
+  background: transparent;
+  color: rgb(var(--c-charcoal, 20 20 20));
+
+  /* reveal fallback */
+  --reveal-dur: 680ms;
+  --reveal-ease: cubic-bezier(.22,.61,.36,1);
+  --reveal-after: 90ms;
+  --reveal-stagger: 140ms;
+  --reveal-y: 14px;
+  --reveal-scale: 0.995;
+
+  /* FAQ layout */
+  --qcol: 26px;
+  --chev: 20px;
+  --gap: 12px;
+}
+
+.wrap{
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4.2vw, 26px);
+}
+
+.inner{
+  position: relative;
+  padding-left: 14px;
+}
+
+/* 左の基準線（SP共通） */
+.inner::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(20,20,20,0.10);
+}
+
+/* ---- reveal ---- */
+.stagger{
+  opacity: 0.001;
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
+  transition:
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
+}
+
+.section:not(:global(.reveal-in)) .stagger{ will-change: transform, opacity; }
+
+.section:global(.reveal-in) .stagger{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+.section:global(.reveal-reduce) .stagger{
+  transition: none;
+  transition-delay: 0ms;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ---- head ---- */
+.header{
+  text-align: left;
+  padding-left: 12px;
+}
+
+.mark{
+  display: block;
+  width: min(220px, 62vw);
+  height: auto;
+  filter: opacity(0.92);
+}
+
+.head{
+  margin: 14px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  font-weight: 650;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
+  white-space: nowrap;
+}
+
+.lead{
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.95;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.70);
+  max-width: 66ch;
+}
+
+/* ---- list ---- */
+.list{
+  margin-top: clamp(18px, 3.2vh, 26px);
+  border-top: 1px solid rgba(20,20,20,0.08);
+}
+
+.item{
+  border-bottom: 1px solid rgba(20,20,20,0.08);
+}
+
+/* summary */
+.summary{
+  list-style: none;
+  cursor: pointer;
+
+  padding: 18px 0;
+
+  display: grid;
+  grid-template-columns: var(--qcol) 1fr var(--chev);
+  column-gap: var(--gap);
+  align-items: baseline;
+}
+.summary::-webkit-details-marker{ display: none; }
+
+.summary:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.32);
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Q */
+.qLabel{
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.46);
+  transform: translateY(1px);
+}
+
+/* question */
+.qText{
+  font-size: 16px;
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.84);
+}
+
+/* arrow（気配） */
+.chev{
+  justify-self: end;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.34);
+  transform: translateY(-0.5px);
+  transition: transform 360ms cubic-bezier(.22,.61,.36,1), color 360ms;
+}
+
+/* open state */
+.item[open] .chev{
+  transform: translateY(-0.5px) rotate(90deg);
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.52);
+}
+
+.item[open] .qText{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.92);
+}
+
+@media (hover:hover){
+  .summary:hover .qText{
+    color: rgb(var(--c-charcoal, 20 20 20) / 0.90);
+  }
+}
+
+/* answer */
+.answer{
+  padding: 0 0 18px;
+}
+
+.aText{
+  margin: 0;
+  padding-left: calc(var(--qcol) + var(--gap));
+  font-size: 15px;
+  line-height: 1.95;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.66);
+  max-width: 70ch;
+}
+
+/* foot */
+.foot{
+  margin: clamp(18px, 3.2vh, 26px) 0 0;
+  padding-left: 12px;
+  border-left: 1px solid rgba(20,20,20,0.10);
+
+  font-size: 13px;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.58);
+}
+
+/* srOnly */
+.srOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* small width */
+@media (max-width: 360px){
+  .summary{ grid-template-columns: 24px 1fr 18px; }
+  .aText{ padding-left: calc(24px + var(--gap)); }
+}

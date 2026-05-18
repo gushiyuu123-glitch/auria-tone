@@ -1,59 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
+import RevealSection from "../components/RevealSection";
 import styles from "./Role.module.css";
 
 const ROLE_IMG = "/auria-role-01.png";
 
 export default function Role() {
-  const rootRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [reduce, setReduce] = useState(false);
-
   // 画像事故対策：1回だけ再取得 → だめなら写真だけ隠して下地へ
   const [imgOk, setImgOk] = useState(true);
   const [imgRetry, setImgRetry] = useState(0);
-
-  useEffect(() => {
-    const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-
-    const apply = () => {
-      const r = !!m?.matches;
-      setReduce(r);
-      if (r) setInView(true);
-    };
-
-    apply();
-
-    const el = rootRef.current;
-    let io;
-
-    // reduce でなければ IntersectionObserver
-    if (!m?.matches && el) {
-      io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          setInView(true);
-          io.disconnect();
-        },
-        { threshold: 0.22, rootMargin: "-12% 0px -12% 0px" }
-      );
-      io.observe(el);
-    }
-
-    m?.addEventListener?.("change", apply);
-
-    return () => {
-      io?.disconnect?.();
-      m?.removeEventListener?.("change", apply);
-    };
-  }, []);
-
-  const cls = useMemo(
-    () =>
-      [styles.section, inView ? styles.in : "", reduce ? styles.reduce : ""]
-        .filter(Boolean)
-        .join(" "),
-    [inView, reduce]
-  );
 
   const roleSrc = imgRetry > 0 ? `${ROLE_IMG}?v=${imgRetry}` : ROLE_IMG;
 
@@ -65,22 +19,15 @@ export default function Role() {
     });
   };
 
-  const onImgLoad = () => {
-    // 途中で復帰した場合に備えて保険
-    setImgOk(true);
-  };
+  const onImgLoad = () => setImgOk(true);
 
   return (
-    <section ref={rootRef} id="role" className={cls} aria-labelledby="role-title">
+    <RevealSection id="role" className={styles.section} aria-labelledby="role-title">
       <div className={styles.wrap}>
         <div className={styles.grid}>
           {/* left: text */}
           <header className={styles.left}>
-            <div
-              className={`${styles.kicker} ${styles.stagger}`}
-              style={{ "--i": 0 }}
-              aria-hidden="true"
-            >
+            <div className={`${styles.kicker} ${styles.stagger}`} style={{ "--i": 0 }} aria-hidden="true">
               <span className={styles.kickerEn}>ROLE</span>
               <span className={styles.kickerDash}>—</span>
               <span className={styles.kickerJp}>役割</span>
@@ -140,6 +87,6 @@ export default function Role() {
           </aside>
         </div>
       </div>
-    </section>
+    </RevealSection>
   );
 }

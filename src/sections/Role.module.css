@@ -1,15 +1,8 @@
-/* src/sections/Role.module.css */
-
 .section{
   padding-top: clamp(96px, 14vh, 160px);
   padding-bottom: clamp(96px, 11vh, 160px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
-
-  /* reveal ルール（章で統一） */
-  --dur: 820ms;
-  --stagger: 180ms;
-  --after: 120ms;
 }
 
 .wrap{
@@ -44,25 +37,30 @@
   margin-top: clamp(92px, 8.8vh, 220px);
 }
 
-/* ==== reveal（統一） ==== */
+/* ==== reveal（統一：グローバル変数で制御） ==== */
 .stagger{
   opacity: 0.001;
-  transform: translateY(12px) scale(0.995);
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
   transition:
-    opacity var(--dur) cubic-bezier(.22,.61,.36,1),
-    transform var(--dur) cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(var(--after) + (var(--i) * var(--stagger)));
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
 }
 
-.section:not(.in) .stagger{ will-change: transform, opacity; }
+/* まだ出てない時だけ will-change */
+.section:not(:global(.reveal-in)) .stagger{
+  will-change: transform, opacity;
+}
 
-.in .stagger{
+/* 出番 */
+.section:global(.reveal-in) .stagger{
   opacity: 1;
   transform: translateY(0) scale(1);
   will-change: auto;
 }
 
-.reduce .stagger{
+/* reduce */
+.section:global(.reveal-reduce) .stagger{
   transition: none;
   transition-delay: 0ms;
   opacity: 1;
@@ -116,26 +114,25 @@
   line-height: 1.28;
   letter-spacing: 0.02em;
   font-weight: 560;
-  opacity: 0.84;
-
-  white-space: nowrap; /* PCは一行で決める */
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.84);
+  white-space: nowrap;
 }
 
 .body{
   margin: 18px 0 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 2.0;
   letter-spacing: 0.04em;
-  opacity: 0.78;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
   max-width: 64ch;
 }
 
 .note{
   margin: 14px 0 0;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 2.0;
   letter-spacing: 0.05em;
-  opacity: 0.72;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
   max-width: 64ch;
 }
 
@@ -146,7 +143,7 @@
   gap: 12px;
   font-size: 11px;
   letter-spacing: 0.20em;
-  opacity: 0.44;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.44);
 }
 
 .flowText{ white-space: nowrap; }
@@ -171,7 +168,6 @@
   aspect-ratio: 5 / 4;
 }
 
-/* 下地（画像が死んでも成立） */
 .imgFallback{
   position: absolute;
   inset: 0;
@@ -180,7 +176,6 @@
     linear-gradient(180deg, rgba(var(--c-bone), 0.55), rgba(var(--c-ivory), 0.96));
 }
 
-/* 膜（blur無しで質を整える） */
 .frame::after{
   content:"";
   position:absolute;
@@ -194,7 +189,6 @@
   );
 }
 
-/* 写真 */
 .img{
   position: absolute;
   inset: 0;
@@ -202,13 +196,11 @@
   height: 100%;
   display: block;
   object-fit: cover;
-
   transform: scale(1.0);
   opacity: 0.86;
   filter: saturate(0.90) contrast(0.92) brightness(1.02);
 }
 
-/* 2回失敗したら写真だけ消して下地に逃がす */
 .imgBroken{
   opacity: 0 !important;
   transform: none !important;
@@ -245,14 +237,4 @@
 
   .shot{ width: min(740px, 100%); }
   .frame{ aspect-ratio: 16 / 10; }
-}
-/* Role.module.css */
-.body{
-  font-size: 16px;  /* ← 14px */
-  line-height: 2.0;
-}
-
-.note{
-  font-size: 15px;  /* ← 13px */
-  line-height: 2.0;
 }

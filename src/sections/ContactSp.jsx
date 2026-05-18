@@ -1,5 +1,5 @@
 import RevealSection from "../components/RevealSection";
-import styles from "./Contact.module.css";
+import styles from "./ContactSp.module.css";
 
 const COPY = {
   headline: "ここで全部決めなくて大丈夫です。",
@@ -11,11 +11,11 @@ const COPY = {
   submit: "相談内容を送る",
 };
 
-export default function Contact() {
+export default function ContactSp() {
   let i = 0;
 
   return (
-    <RevealSection id="contact" className={styles.section} aria-labelledby="contact-title">
+    <RevealSection id="contact-sp" className={styles.section} aria-labelledby="contact-title-sp">
       <div className={styles.wrap}>
         <header className={styles.head}>
           <img
@@ -27,7 +27,7 @@ export default function Contact() {
             draggable="false"
           />
 
-          <h2 id="contact-title" className={styles.srOnly}>
+          <h2 id="contact-title-sp" className={styles.srOnly}>
             初回相談
           </h2>
 
@@ -44,7 +44,7 @@ export default function Contact() {
           </div>
         </header>
 
-        <div className={styles.stage}>
+        <div className={styles.stage} aria-label="初回相談フォームの用紙">
           <div className={styles.tapeA} aria-hidden="true" />
           <div className={styles.tapeB} aria-hidden="true" />
 
@@ -52,13 +52,17 @@ export default function Contact() {
             <span className={styles.cornerTL} aria-hidden="true" />
             <span className={styles.cornerBR} aria-hidden="true" />
 
-            <form className={styles.form} onSubmit={(e) => e.preventDefault()} aria-label="初回相談フォーム">
+            <form
+              className={styles.form}
+              onSubmit={(e) => e.preventDefault()}
+              aria-label="初回相談フォーム"
+            >
               <div className={styles.row}>
-                <label className={styles.label} htmlFor="name">
+                <label className={styles.label} htmlFor="name-sp">
                   お名前
                 </label>
                 <input
-                  id="name"
+                  id="name-sp"
                   name="name"
                   className={styles.input}
                   placeholder="例）山田 太郎"
@@ -67,11 +71,11 @@ export default function Contact() {
               </div>
 
               <div className={styles.row}>
-                <label className={styles.label} htmlFor="email">
+                <label className={styles.label} htmlFor="email-sp">
                   メールアドレス
                 </label>
                 <input
-                  id="email"
+                  id="email-sp"
                   name="email"
                   type="email"
                   inputMode="email"
@@ -83,27 +87,28 @@ export default function Contact() {
               </div>
 
               <div className={styles.row}>
-                <label className={styles.label} htmlFor="type">
+                <label className={styles.label} htmlFor="type-sp">
                   相談の対象
                 </label>
                 <div className={styles.field}>
                   <input
-                    id="type"
+                    id="type-sp"
                     name="type"
                     className={styles.input}
-                    placeholder="例）マンション改装／戸建て／店舗／インテリア相談 など"
+                    placeholder="例）改装／新築／店舗／インテリア相談 など"
+                    autoComplete="off"
                   />
                   <p className={styles.hint}>未定でも大丈夫です。</p>
                 </div>
               </div>
 
               <div className={`${styles.row} ${styles.rowTall}`}>
-                <label className={styles.label} htmlFor="detail">
+                <label className={styles.label} htmlFor="detail-sp">
                   状況と希望
                 </label>
                 <div className={styles.field}>
                   <textarea
-                    id="detail"
+                    id="detail-sp"
                     name="detail"
                     className={styles.textarea}
                     placeholder="例）現在の状況、困っていること、理想のイメージなど。書ける範囲で大丈夫です。"
@@ -114,30 +119,32 @@ export default function Contact() {
               </div>
 
               <div className={styles.row}>
-                <label className={styles.label} htmlFor="timing">
+                <label className={styles.label} htmlFor="timing-sp">
                   希望時期（任意）
                 </label>
                 <div className={styles.field}>
                   <input
-                    id="timing"
+                    id="timing-sp"
                     name="timing"
                     className={styles.input}
                     placeholder="例）3ヶ月以内／来年春頃／未定"
+                    autoComplete="off"
                   />
                   <p className={styles.hint}>未定でも大丈夫です。</p>
                 </div>
               </div>
 
               <div className={styles.row}>
-                <label className={styles.label} htmlFor="budget">
+                <label className={styles.label} htmlFor="budget-sp">
                   予算感（任意）
                 </label>
                 <div className={styles.field}>
                   <input
-                    id="budget"
+                    id="budget-sp"
                     name="budget"
                     className={styles.input}
                     placeholder="例）〜100万／100〜300万／300〜500万／未定"
+                    autoComplete="off"
                   />
                   <p className={styles.hint}>未定でも大丈夫です。</p>
                 </div>
@@ -152,7 +159,6 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* note も呼吸に乗せる */}
         <p className={`${styles.note} ${styles.stagger}`} style={{ "--i": i++ }}>
           {COPY.note}
         </p>

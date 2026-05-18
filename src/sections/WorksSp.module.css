@@ -1,26 +1,26 @@
-/* src/sections/Works.module.css */
-
 .section{
-  padding-top: clamp(200px, 22vh, 340px);
-  padding-bottom: clamp(72px, 10vh, 150px);
+  padding-top: clamp(86px, 12vh, 140px);
+  padding-bottom: clamp(96px, 12vh, 150px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
+
+  /* reveal fallback（globalが無くても成立） */
+  --reveal-dur: 680ms;
+  --reveal-ease: cubic-bezier(.22,.61,.36,1);
+  --reveal-after: 90ms;
+  --reveal-stagger: 140ms;
+  --reveal-y: 14px;
+  --reveal-scale: 0.995;
+
+  --shift: 14px; /* サブ2枚の“規格ズレ” */
 }
 
 .wrap{
-  width: min(1680px, 100%);
+  width: min(680px, 100%);
   margin: 0 auto;
-  padding: 0 clamp(18px, 3.4vw, 84px);
-}
-
-.grid{
+  padding: 0 clamp(18px, 4.2vw, 26px);
   display: grid;
-  grid-template-columns: 0.94fr 1.06fr;
-  grid-template-rows: auto auto auto auto;
-  column-gap: clamp(34px, 4.2vw, 76px);
   row-gap: clamp(18px, 2.2vh, 22px);
-  align-items: start;
-  --shift: clamp(18px, 2.2vw, 52px);
 }
 
 /* ---------------- reveal（統一） ---------------- */
@@ -53,13 +53,11 @@
 
 /* ---- Head ---- */
 .head{
-  grid-column: 1;
-  grid-row: 1;
-  --tx: -14px;  /* ← 横から */
+  --tx: -10px;
   --ty: 0px;
+  text-align: left;
 }
 
-/* kicker */
 .kicker{
   display: inline-flex;
   align-items: baseline;
@@ -73,7 +71,7 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 46px;
+  width: 48px;
   height: 1px;
   background: rgba(20,20,20,0.10);
 }
@@ -81,49 +79,28 @@
 .kickerEn{
   letter-spacing: 0.24em;
   font-weight: 610;
-  font-size: 14px;
-  opacity: 0.63;
+  font-size: 13px;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.62);
 }
 
-.kickerDash{ opacity: 0.32; }
+.kickerDash{ color: rgb(var(--c-charcoal, 20 20 20) / 0.30); }
 
 .kickerJp{
   letter-spacing: 0.16em;
   font-size: 12px;
-  opacity: 0.78;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
   transform: translateY(1px);
-}
-
-@media (min-width: 1200px){
-  .kickerEn{ font-size: 15px; }
-  .kicker::after{ width: 54px; }
 }
 
 .support{
   margin: 14px 0 0;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  line-height: 1.6;
-  opacity: 0.56;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.60);
 }
 
-/* ---- Cards ---- */
-.card, .main, .more{
-  --ty: 10px; /* ← 旧の “少し浮いて出る” を保持 */
-}
-
-.cardA{ grid-column: 1; grid-row: 2; }
-.cardB{ grid-column: 1; grid-row: 3; }
-
-.main{
-  grid-column: 2;
-  grid-row: 1 / span 3;
-  justify-self: end;
-  width: 92%;
-  max-width: 920px;
-}
-
-/* frame: 直角 / 薄い縁 / 1pxの内側エッジで品を作る */
+/* ---- Frames ---- */
 .frame{
   position: relative;
   overflow: hidden;
@@ -141,10 +118,6 @@
   opacity: 0.55;
 }
 
-.cardA .frame{ aspect-ratio: 16 / 9; }
-.cardB .frame{ aspect-ratio: 16 / 10; }
-.main  .frame{ aspect-ratio: 4 / 5; }
-
 /* 画像下地（エラー時も破綻しない） */
 .imgFallback{
   position:absolute;
@@ -161,8 +134,9 @@
   height: 100%;
   display: block;
   object-fit: cover;
+
   transform: scale(1.01);
-  filter: brightness(1.02) saturate(0.98) contrast(1.01);
+  filter: brightness(1.02) saturate(0.96) contrast(1.02);
 }
 
 .imgBroken{
@@ -171,18 +145,40 @@
   filter: none !important;
 }
 
-/* 左2枚の“規格ズレ” */
-.cardA .frame,
-.cardA .cap{
-  width: calc(100% - var(--shift));
-  margin-left: 0;
+/* “薄い膜”だけ（ガラス禁止・blurなし） */
+.veil{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(255,255,255,0.00) 52%,
+    rgba(0,0,0,0.10) 100%
+  );
+  opacity: 0.85;
 }
 
-.cardB .frame,
-.cardB .cap{
-  width: calc(100% - var(--shift));
-  margin-left: var(--shift);
+/* ---- Layout ---- */
+.main{
+  --ty: 10px;
+  margin-top: clamp(10px, 1.6vh, 16px);
 }
+
+.main .frame{
+  aspect-ratio: 16 / 11; /* SPで主役が“縦に強い” */
+}
+
+.card{
+  --ty: 10px;
+}
+
+.cardA .frame{ aspect-ratio: 16 / 10; }
+.cardB .frame{ aspect-ratio: 16 / 10; }
+
+/* サブ2枚の“規格ズレ”（SPのリズム） */
+.cardA{ transform: translateX(0); }
+.cardB{ transform: translateX(var(--shift)); }
 
 /* caption */
 .cap, .capMain{
@@ -190,9 +186,10 @@
   align-items: baseline;
   gap: 10px;
   margin-top: 10px;
+
   font-size: 11px;
   letter-spacing: 0.12em;
-  opacity: 0.58;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.60);
 }
 
 .capRule{
@@ -202,15 +199,12 @@
   transform: translateY(-2px);
 }
 
-.capLabel{ opacity: 0.84; white-space: nowrap; }
-.capMeta{ opacity: 0.62; white-space: nowrap; }
+.capLabel{ color: rgb(var(--c-charcoal, 20 20 20) / 0.84); white-space: nowrap; }
+.capMeta{ color: rgb(var(--c-charcoal, 20 20 20) / 0.62); white-space: nowrap; }
 
 /* ---- More ---- */
 .more{
-  grid-column: 1 / -1;
-  grid-row: 4;
-  margin-top: clamp(16px, 2.6vh, 26px);
-
+  margin-top: clamp(12px, 2.2vh, 22px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +217,7 @@
 .moreText{
   font-size: 11px;
   letter-spacing: 0.22em;
-  opacity: 0.58;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.58);
 }
 
 .moreRule{
@@ -260,33 +254,7 @@
   border: 0;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 980px){
-  .grid{
-    grid-template-columns: 1fr;
-    row-gap: 18px;
-    --shift: 0px;
-  }
-
-  .head{ grid-column: 1; grid-row: 1; }
-
-  .main{
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: stretch;
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .cardA{ grid-column: 1; grid-row: 3; }
-  .cardB{ grid-column: 1; grid-row: 4; }
-  .more{ grid-column: 1; grid-row: 5; }
-
-  .cardA .frame, .cardA .cap,
-  .cardB .frame, .cardB .cap{
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .main .frame{ aspect-ratio: 16 / 10; }
+/* 超狭幅だけ“規格ズレ”を消す（事故防止） */
+@media (max-width: 360px){
+  .cardB{ transform: translateX(0); }
 }

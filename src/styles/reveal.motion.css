@@ -1,0 +1,17 @@
+:root{
+  --reveal-dur: 660ms;        /* 820 → 660 */
+  --reveal-stagger: 140ms;    /* 180 → 140 */
+  --reveal-after: 90ms;       /* 120 → 90 */
+
+  --reveal-y: 12px;
+  --reveal-scale: 0.995;
+  --reveal-ease: cubic-bezier(.22,.61,.36,1);
+}
+/* ここぞ（Gallery/KV）だけ少し遅い */
+[data-reveal="slow"]{
+  --reveal-dur: 860ms;
+  --reveal-stagger: 130ms;
+  --reveal-after: 80ms;
+  --reveal-y: 14px;
+  --reveal-scale: 0.995;
+}

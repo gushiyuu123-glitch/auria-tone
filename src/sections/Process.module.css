@@ -5,12 +5,6 @@
   padding-bottom: clamp(120px, 14vh, 210px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
-
-  /* Role/Services/Promise/Pricing と統一 */
-  --dur: 820ms;
-  --stagger: 180ms;
-  --after: 120ms;
-
   position: relative;
 }
 
@@ -30,32 +24,51 @@
 .wrap{
   width: min(1680px, 100%);
   margin: 0 auto;
-  padding: 0 clamp(18px, 3.4vw, 84px);
+  padding-left: clamp(18px, 3.4vw, 84px);
+  padding-right: clamp(86px, 6.2vw, 220px); /* 右側のフローに呼吸を残す */
 }
 
 /* 左ガター | 左コピー | 右フロー（他章と同文法） */
 .grid{
   display: grid;
   grid-template-columns:
-    clamp(18px, 3.2vw, 72px)
-    minmax(0, 0.78fr)
-    minmax(0, 1.22fr);
-  column-gap: clamp(26px, 3.0vw, 72px);
+    clamp(12px, 2.2vw, 56px)
+    minmax(0, 0.76fr)
+    minmax(0, 1.24fr);
+  column-gap: clamp(22px, 2.6vw, 60px);
   align-items: start;
 }
 
-/* reveal（統一） */
+/* reveal（統一：グローバル変数で制御） */
 .stagger{
   opacity: 0.001;
-  transform: translateY(12px) scale(0.995);
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
   transition:
-    opacity var(--dur) cubic-bezier(.22,.61,.36,1),
-    transform var(--dur) cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(var(--after) + (var(--i) * var(--stagger)));
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
 }
-.section:not(.in) .stagger{ will-change: transform, opacity; }
-.in .stagger{ opacity: 1; transform: translateY(0) scale(1); will-change: auto; }
-.reduce .stagger{ transition:none; transition-delay:0ms; opacity:1; transform:none; will-change:auto; }
+
+/* まだ出てない時だけ will-change */
+.section:not(:global(.reveal-in)) .stagger{
+  will-change: transform, opacity;
+}
+
+/* 出番 */
+.section:global(.reveal-in) .stagger{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+/* reduce */
+.section:global(.reveal-reduce) .stagger{
+  transition:none;
+  transition-delay:0ms;
+  opacity:1;
+  transform:none;
+  will-change:auto;
+}
 
 /* kicker */
 .kicker{
@@ -79,13 +92,16 @@
   letter-spacing: 0.22em;
   font-weight: 610;
   font-size: 13px;
-  opacity: 0.72;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
 }
-.kickerDash{ opacity: 0.30; transform: translateY(-0.5px); }
+.kickerDash{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.30);
+  transform: translateY(-0.5px);
+}
 .kickerJp{
   letter-spacing: 0.14em;
   font-size: 12px;
-  opacity: 0.68;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.68);
   transform: translateY(1px);
 }
 
@@ -101,8 +117,13 @@
   line-height: 1.22;
   letter-spacing: 0.01em;
   font-weight: 560;
-  opacity: 0.86;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.86);
   max-width: 22ch;
+}
+
+.headLine{
+  display: block;
+  white-space: nowrap;
 }
 
 .shortRule{
@@ -113,16 +134,17 @@
   margin: 20px 0 18px;
 }
 
-/* 読ませる：小さすぎ禁止 */
+/* 読ませる */
 .lead{
   width: min(54ch, 100%);
 }
+
 .leadLine{
   margin: 0;
-  font-size: 16px;      /* ← 13pxをやめる */
+  font-size: 16px;
   line-height: 2.0;
   letter-spacing: 0.03em;
-  opacity: 0.72;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
 }
 .leadLine + .leadLine{ margin-top: 10px; }
 
@@ -133,7 +155,7 @@
   padding-top: clamp(6px, 1.4vh, 18px);
 }
 
-/* flow grid */
+/* flow */
 .flow{
   list-style: none;
   margin: 0;
@@ -153,18 +175,18 @@
   position: relative;
 }
 
-/* arrow between（画像中心に合わせる） */
+/* arrow between */
 .arrowBetween{
   position: absolute;
   right: calc(-1 * clamp(16px, 1.8vw, 30px));
   top: calc(var(--sq) / 2);
   transform: translateY(-50%);
   font-size: 18px;
-  opacity: 0.38;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.38);
   pointer-events: none;
 }
 
-/* square image */
+/* square */
 .figure{ margin: 0; }
 
 .square{
@@ -178,7 +200,6 @@
   border: 1px solid rgba(20,20,20,0.055);
 }
 
-/* 下地 + 画像事故対策 */
 .imgFallback{
   position:absolute;
   inset:0;
@@ -224,17 +245,17 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.12em;
   font-size: 13px;
-  opacity: 0.58;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.58);
 }
 
 .titleRow{ margin-top: 10px; }
 
 .title{
   margin: 0;
-  font-size: 16px;     /* ← 15 → 16 */
+  font-size: 16px;
   line-height: 1.6;
   letter-spacing: 0.03em;
-  opacity: 0.86;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.86);
 }
 
 .miniRule{
@@ -247,12 +268,11 @@
 
 .desc{
   margin: 12px 0 0;
-  font-size: 15px;     /* ← 13をやめる */
+  font-size: 15px;
   line-height: 1.95;
   letter-spacing: 0.03em;
-  opacity: 0.66;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.66);
 }
-
 
 .inlineLink{
   display: inline-flex;
@@ -261,10 +281,10 @@
   text-decoration: none;
   border-bottom: 1px solid rgba(20,20,20,0.20);
   padding-bottom: 2px;
-  opacity: 0.84;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.84);
 }
 @media (hover:hover){
-  .inlineLink:hover{ opacity: 1; }
+  .inlineLink:hover{ color: rgb(var(--c-charcoal, 20 20 20) / 1); }
 }
 
 /* srOnly */
@@ -282,6 +302,10 @@
 
 /* SP */
 @media (max-width: 980px){
+  .wrap{
+    padding-right: clamp(18px, 3.4vw, 84px);
+  }
+
   .grid{
     grid-template-columns: 1fr;
     row-gap: 26px;
@@ -296,36 +320,6 @@
   .arrowBetween{ display: none; }
   .headline{ max-width: none; }
 
-  /* 16px化の分だけ少し締める */
   .leadLine{ line-height: 1.92; }
-}
-.grid{
-  display: grid;
-  grid-template-columns:
-    clamp(12px, 2.2vw, 56px)  /* ← 18/3.2vw/72 を削る */
-    minmax(0, 0.76fr)
-    minmax(0, 1.24fr);
-  column-gap: clamp(22px, 2.6vw, 60px);
-  align-items: start;
-}
-.wrap{
-  width: min(1680px, 100%);
-  margin: 0 auto;
-  padding-left: clamp(18px, 3.4vw, 84px);
-  padding-right: clamp(86px, 6.2vw, 220px); /* ← 58/5.4vw/172 を一段だけ増やす */
-}
-/* Process.module.css */
-.wrap{
-  width: min(1680px, 100%);
-  margin: 0 auto 0 0;             /* ← 0 auto をやめる：左にロック */
-  padding: 0 clamp(18px, 3.4vw, 84px);
-}
-.headLine{
-  display: block;
-  white-space: nowrap; /* PCは必ずこの2行 */
-}
-
-/* SPは折り返しOK（はみ出し防止） */
-@media (max-width: 980px){
   .headLine{ white-space: normal; }
 }

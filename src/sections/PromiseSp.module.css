@@ -1,0 +1,273 @@
+.section{
+  padding-top: clamp(86px, 11vh, 132px);
+  padding-bottom: clamp(92px, 12vh, 150px);
+  background: transparent;
+  color: rgb(var(--c-charcoal, 20 20 20));
+
+  /* reveal fallback（グローバル未定義でも成立） */
+  --reveal-dur: 680ms;
+  --reveal-ease: cubic-bezier(.22,.61,.36,1);
+  --reveal-after: 90ms;
+  --reveal-stagger: 140ms;
+  --reveal-y: 14px;
+  --reveal-scale: 0.995;
+}
+
+.wrap{
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4.2vw, 26px);
+}
+
+.inner{
+  position: relative;
+  padding-left: 14px; /* 紙面の“基準線”分 */
+}
+
+/* 左の基準線（RoleSpと揃える） */
+.inner::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(20,20,20,0.10);
+}
+
+/* ---- reveal（統一：グローバル変数で制御） ---- */
+.stagger{
+  opacity: 0.001;
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
+  transition:
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
+}
+
+.section:not(:global(.reveal-in)) .stagger{ will-change: transform, opacity; }
+
+.section:global(.reveal-in) .stagger{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+.section:global(.reveal-reduce) .stagger{
+  transition: none;
+  transition-delay: 0ms;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ---- head ---- */
+.head{ }
+
+.kicker{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.kicker::after{
+  content:"";
+  position:absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 1px;
+  background: rgba(20,20,20,0.12);
+}
+
+.kickerEn{
+  letter-spacing: 0.24em;
+  font-weight: 640;
+  font-size: 13px;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.64);
+}
+
+.kickerDash{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.30);
+  transform: translateY(-0.5px);
+}
+
+.kickerJp{
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
+  transform: translateY(1px);
+}
+
+/* “判決” */
+.headline{
+  margin: 0;
+  font-size: clamp(20px, 5.5vw, 26px);
+  line-height: 1.42;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.90);
+  max-width: 22ch;
+}
+
+/* 章の区切り線 */
+.rule{
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin: 16px 0 18px;
+  background: rgba(20,20,20,0.10);
+}
+
+/* ---- clauses（番号付き条文） ---- */
+.list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  counter-reset: clause;
+  display: grid;
+  row-gap: 12px;
+}
+
+/* 1条ずつ：番号＝判断の固定 */
+.item{
+  counter-increment: clause;
+  position: relative;
+
+  padding-left: 38px;
+  max-width: 66ch;
+
+  font-size: 16px;
+  line-height: 1.95;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.80);
+}
+
+.item::before{
+  content: counter(clause, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 650;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.46);
+}
+
+/* 条文の“静かな縦線” */
+.item::after{
+  content:"";
+  position:absolute;
+  left: 24px;
+  top: 0.55em;
+  bottom: 0.55em;
+  width: 1px;
+  background: rgba(20,20,20,0.08);
+}
+
+/* ---- no block（条項ブロック） ---- */
+.noBlock{
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(20,20,20,0.08);
+}
+
+.noTitle{
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  font-weight: 650;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.60);
+}
+
+.noList{
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  row-gap: 10px;
+}
+
+.noItem{
+  position: relative;
+  padding-left: 14px;
+
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
+}
+
+.noItem::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 0.85em;
+  width: 8px;
+  height: 1px;
+  background: rgba(20,20,20,0.22);
+}
+
+/* ---- pricing link（出口は強く、でもUI臭は出さない） ---- */
+.pricingLink{
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+
+  text-decoration: none;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
+
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.pricingLead,
+.pricingTail{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.62);
+}
+
+.pricingWord{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.92);
+  border-bottom: 1px solid rgba(20,20,20,0.20);
+  padding-bottom: 2px;
+}
+
+.arrow{
+  opacity: 0.44;
+  transform: translateY(-0.5px);
+}
+
+@media (hover:hover){
+  .pricingLink:hover{
+    color: rgb(var(--c-charcoal, 20 20 20) / 0.92);
+  }
+  .pricingLink:hover .pricingWord{
+    border-bottom-color: rgba(20,20,20,0.32);
+  }
+}
+
+.pricingLink:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.40);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+/* srOnly */
+.srOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

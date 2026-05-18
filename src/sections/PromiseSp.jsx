@@ -1,0 +1,94 @@
+import RevealSection from "../components/RevealSection";
+import styles from "./PromiseSp.module.css";
+
+const COPY = {
+  kickerEn: "PROMISE",
+  kickerJp: "お約束",
+  headline: "基準は、最初から動かしません。",
+  lines: [
+    "最初に、仕上がりの基準を言葉で固めます。",
+    "判断の順番まで、先に決めます。",
+    "現場では監修でズレを拾い、納まりを合わせます。",
+    "明度・素材・光は、最後にまとめて整えます。",
+    "仕上がりが“たまたま”にならないように進めます。",
+  ],
+  noTitle: "やらないこと",
+  noItems: [
+    "施工は請負いません。",
+    "その場の判断で、仕様は動かしません。",
+    "“それっぽい”で終わらせません。",
+  ],
+};
+
+export default function PromiseSp() {
+  let i = 0;
+
+  return (
+    <RevealSection
+      id="promise-sp"
+      className={styles.section}
+      aria-labelledby="promise-title-sp"
+    >
+      <div className={styles.wrap}>
+        <div className={styles.inner}>
+          {/* head */}
+          <header className={styles.head}>
+            <div className={`${styles.kicker} ${styles.stagger}`} style={{ "--i": i++ }} aria-hidden="true">
+              <span className={styles.kickerEn}>{COPY.kickerEn}</span>
+              <span className={styles.kickerDash}>—</span>
+              <span className={styles.kickerJp}>{COPY.kickerJp}</span>
+            </div>
+
+            <h2 id="promise-title-sp" className={styles.srOnly}>
+              お約束
+            </h2>
+
+            <p className={`${styles.headline} ${styles.stagger}`} style={{ "--i": i++ }}>
+              {COPY.headline}
+            </p>
+
+            <span className={`${styles.rule} ${styles.stagger}`} style={{ "--i": i++ }} aria-hidden="true" />
+          </header>
+
+          {/* clauses */}
+          <ol className={styles.list} aria-label="進め方の基準">
+            {COPY.lines.map((t) => (
+              <li key={t} className={`${styles.item} ${styles.stagger}`} style={{ "--i": i++ }}>
+                {t}
+              </li>
+            ))}
+          </ol>
+
+          <span className={`${styles.rule} ${styles.stagger}`} style={{ "--i": i++ }} aria-hidden="true" />
+
+          {/* no */}
+          <div className={styles.noBlock} aria-label="やらないこと">
+            <p className={`${styles.noTitle} ${styles.stagger}`} style={{ "--i": i++ }}>
+              {COPY.noTitle}
+            </p>
+
+            <ul className={styles.noList} role="list">
+              {COPY.noItems.map((t) => (
+                <li key={t} role="listitem" className={`${styles.noItem} ${styles.stagger}`} style={{ "--i": i++ }}>
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* exit */}
+          <a
+            href="#pricing-sp"
+            className={`${styles.pricingLink} ${styles.stagger}`}
+            style={{ "--i": i++ }}
+            aria-label="PRICINGへ"
+          >
+            <span className={styles.pricingLead}>費用の目安は</span>
+            <span className={styles.pricingWord}>PRICING</span>
+            <span className={styles.pricingTail}>にまとめています</span>
+          </a>
+        </div>
+      </div>
+    </RevealSection>
+  );
+}

@@ -1,0 +1,308 @@
+.section{
+  padding-top: clamp(86px, 11vh, 132px);
+  padding-bottom: clamp(92px, 12vh, 150px);
+  background: transparent;
+  color: rgb(var(--c-charcoal, 20 20 20));
+
+  /* reveal fallback */
+  --reveal-dur: 680ms;
+  --reveal-ease: cubic-bezier(.22,.61,.36,1);
+  --reveal-after: 90ms;
+  --reveal-stagger: 140ms;
+  --reveal-y: 14px;
+  --reveal-scale: 0.995;
+}
+
+.wrap{
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4.2vw, 26px);
+}
+
+/* ---- reveal ---- */
+.stagger{
+  opacity: 0.001;
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
+  transition:
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
+}
+
+.section:not(:global(.reveal-in)) .stagger{ will-change: transform, opacity; }
+
+.section:global(.reveal-in) .stagger{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  will-change: auto;
+}
+
+.section:global(.reveal-reduce) .stagger{
+  transition: none;
+  transition-delay: 0ms;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ---------------- head（紙面） ---------------- */
+.head{
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: clamp(18px, 3.2vh, 26px);
+}
+
+.head::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(20,20,20,0.10);
+}
+
+.kicker{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.kicker::after{
+  content:"";
+  position:absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 1px;
+  background: rgba(20,20,20,0.12);
+}
+
+.kickerEn{
+  letter-spacing: 0.24em;
+  font-weight: 640;
+  font-size: 13px;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.64);
+}
+
+.kickerDash{
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.30);
+  transform: translateY(-0.5px);
+}
+
+.kickerJp{
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
+  transform: translateY(1px);
+}
+
+.headline{
+  margin: 0;
+  font-size: clamp(20px, 5.6vw, 26px);
+  line-height: 1.42;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.90);
+  max-width: 24ch;
+}
+
+.headLine{ display:block; white-space: nowrap; }
+@media (max-width: 360px){
+  .headLine{ white-space: normal; }
+}
+
+.shortRule{
+  display: block;
+  width: 38px;
+  height: 1px;
+  background: rgba(20,20,20,0.12);
+  margin: 16px 0 14px;
+}
+
+.lead{
+  max-width: 66ch;
+  display: grid;
+  row-gap: 10px;
+}
+
+.leadLine{
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.95;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.76);
+}
+
+/* ---------------- timeline ---------------- */
+.flow{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  row-gap: 16px;
+}
+
+/* 1ステップ = “紙面 + 証拠” */
+.step{
+  position: relative;
+  padding-left: 14px;
+}
+
+.step::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: rgba(20,20,20,0.08);
+}
+
+.row{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  column-gap: 14px;
+  align-items: start;
+}
+
+/* square image */
+.figure{ margin: 0; }
+
+.square{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0;
+  background: rgba(20,20,20,0.015);
+  border: 1px solid rgba(20,20,20,0.055);
+}
+
+.imgFallback{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(980px 520px at 18% 42%, rgba(var(--c-bone), 0.70), rgba(var(--c-ivory), 0.92)),
+    linear-gradient(180deg, rgba(var(--c-bone), 0.55), rgba(var(--c-ivory), 0.96));
+}
+
+.veil{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.20) 0%,
+    rgba(255,255,255,0.06) 55%,
+    rgba(0,0,0,0.12) 100%
+  );
+  opacity: 0.9;
+}
+
+.square::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+  opacity: 0.45;
+}
+
+.img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display:block;
+  object-fit: cover;
+  transform: scale(1.01);
+  opacity: 0.90;
+  filter: saturate(0.94) contrast(0.95) brightness(1.03);
+}
+
+.imgBroken{
+  opacity: 0 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* meta */
+.meta{ padding-top: 2px; }
+
+.no{
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.48);
+}
+
+.title{
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.88);
+}
+
+.miniRule{
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: rgba(20,20,20,0.12);
+  margin-top: 10px;
+}
+
+.desc{
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.66);
+  max-width: 62ch;
+}
+
+/* between arrow（気配） */
+.arrowBetween{
+  display: block;
+  margin: 12px 0 0;
+  padding-left: 124px; /* 画像+gap分に合わせる */
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.34);
+}
+
+/* bottom note */
+.bottomNote{
+  margin: clamp(18px, 3.2vh, 26px) 0 0;
+  font-size: 13px;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.58);
+  padding-left: 14px;
+  border-left: 1px solid rgba(20,20,20,0.10);
+}
+
+/* srOnly */
+.srOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* small width */
+@media (max-width: 360px){
+  .row{ grid-template-columns: 96px 1fr; }
+  .arrowBetween{ padding-left: 110px; }
+}

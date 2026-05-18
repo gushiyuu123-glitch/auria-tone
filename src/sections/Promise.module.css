@@ -5,11 +5,6 @@
   padding-bottom: clamp(96px, 11vh, 160px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
-
-  /* ROLEと統一 */
-  --dur: 820ms;
-  --stagger: 180ms;
-  --after: 120ms;
 }
 
 .wrap{
@@ -18,32 +13,37 @@
   padding: 0 clamp(18px, 3.4vw, 84px);
 }
 
-/* センター構図。ただし本文は読みやすくブロックを整える */
+/* センター構図。ただし本文は“中央の箱＋左で読む” */
 .inner{
   width: min(980px, 100%);
   margin: 0 auto;
   text-align: center;
 }
 
-/* --- reveal（統一） --- */
+/* --- reveal（統一：グローバル変数で制御） --- */
 .stagger{
   opacity: 0.001;
-  transform: translateY(12px) scale(0.995);
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
   transition:
-    opacity var(--dur) cubic-bezier(.22,.61,.36,1),
-    transform var(--dur) cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(var(--after) + (var(--i) * var(--stagger)));
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
 }
 
-.section:not(.in) .stagger{ will-change: transform, opacity; }
+/* まだ出てない時だけ will-change */
+.section:not(:global(.reveal-in)) .stagger{
+  will-change: transform, opacity;
+}
 
-.in .stagger{
+/* 出番 */
+.section:global(.reveal-in) .stagger{
   opacity: 1;
   transform: translateY(0) scale(1);
   will-change: auto;
 }
 
-.reduce .stagger{
+/* reduce */
+.section:global(.reveal-reduce) .stagger{
   transition: none;
   transition-delay: 0ms;
   opacity: 1;
@@ -60,6 +60,7 @@
   padding-bottom: 10px;
   margin-bottom: 24px;
 }
+
 .kicker::after{
   content:"";
   position:absolute;
@@ -70,31 +71,34 @@
   height: 1px;
   background: rgba(20,20,20,0.14);
 }
+
 .kickerEn{
   letter-spacing: 0.22em;
   font-weight: 610;
   font-size: 13px;
-  opacity: 0.72;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
 }
+
 .kickerDash{
-  opacity: 0.30;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.30);
   transform: translateY(-0.5px);
 }
+
 .kickerJp{
   letter-spacing: 0.14em;
   font-size: 12px;
-  opacity: 0.68;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.68);
   transform: translateY(1px);
 }
 
-/* headline */
+/* headline（opacity禁止） */
 .headline{
   margin: 0;
   font-size: clamp(22px, 2.6vw, 34px);
   line-height: 1.36;
   letter-spacing: 0.02em;
   font-weight: 560;
-  opacity: 0.88;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.88);
 }
 
 /* rule */
@@ -108,12 +112,7 @@
 
 /* lines */
 .text{
-  /* ここが原因：固定幅の左揃えが「左に寄って見える」 */
-  /* width: min(640px, 100%); */
-  /* margin: 0 auto; */
-  /* text-align: left; */
-
-  /* 修正：内容幅に追従する箱を “中央” に置き、文字は左で読む */
+  /* “中央の箱”に置いて、文字は左で読む */
   display: inline-block;
   max-width: 640px;
   width: auto;
@@ -126,12 +125,13 @@
     width: min(640px, 100%);
   }
 }
+
 .line{
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 2.0;
-  letter-spacing: 0.04em;
-  opacity: 0.78;
+  letter-spacing: 0.03em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.82);
 }
 .line + .line{ margin-top: 14px; }
 
@@ -140,7 +140,7 @@
   margin: 0;
   font-size: 13px;
   letter-spacing: 0.12em;
-  opacity: 0.68;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.68);
 }
 
 .noGrid{
@@ -155,12 +155,13 @@
 .noItem{
   margin: 0;
   padding: 10px clamp(14px, 2vw, 22px);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.9;
   letter-spacing: 0.04em;
-  opacity: 0.74;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
   white-space: nowrap;
 }
+
 .noItem:nth-child(n + 2){
   border-left: 1px solid rgba(20,20,20,0.12);
 }
@@ -171,33 +172,27 @@
   align-items: baseline;
   gap: 8px;
   margin-top: 34px;
-  font-size: 13px;
+
+  font-size: 15px;
   letter-spacing: 0.04em;
-  opacity: 0.78;
+
+  /* opacity禁止（staggerと競合する） */
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.82);
   text-decoration: none;
-  color: inherit;
 }
 
-.pricingLead{ opacity: 0.70; }
-.pricingTail{ opacity: 0.70; }
+.pricingLead{ color: rgb(var(--c-charcoal, 20 20 20) / 0.70); }
+.pricingTail{ color: rgb(var(--c-charcoal, 20 20 20) / 0.70); }
 
 .pricingWord{
   border-bottom: 1px solid rgba(20,20,20,0.22);
   padding-bottom: 2px;
-  opacity: 0.92;
-}
-
-.arrow{
-  opacity: 0.55;
-  transform: translateY(-0.5px);
-  transition: transform 420ms cubic-bezier(.22,.61,.36,1), opacity 420ms ease;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.92);
 }
 
 @media (hover: hover){
-  .pricingLink:hover{ opacity: 0.92; }
-  .pricingLink:hover .arrow{
-    transform: translateY(-0.5px) translateX(3px);
-    opacity: 0.72;
+  .pricingLink:hover{
+    color: rgb(var(--c-charcoal, 20 20 20) / 0.92);
   }
 }
 
@@ -238,41 +233,4 @@
   .noItem:nth-child(n + 2){
     border-left: none;
   }
-}
-/* 本文：14 → 15 / 濃度も少し戻す */
-.line{
-  font-size: 15px;          /* ← 14px */
-  line-height: 2.0;
-  letter-spacing: 0.035em;  /* ← 0.04em（ほんの少しだけ詰める） */
-  opacity: 0.82;            /* ← 0.78 */
-}
-
-/* やらないこと：小さすぎて目が止まるので +1 */
-.noItem{
-  font-size: 14px;          /* ← 13px */
-  line-height: 1.9;
-  opacity: 0.78;            /* ← 0.74 */
-}
-
-/* 下のリンク：13はギリ。本文に寄せる */
-.pricingLink{
-  font-size: 14px;          /* ← 13px */
-  opacity: 0.82;            /* ← 0.78 */
-}
-/* 本文：14→16（ここが主犯） */
-.line{
-  font-size: 16px;        /* ← 14px */
-  line-height: 2.0;
-  letter-spacing: 0.03em; /* ← 0.04em（少し詰めて読みやすく） */
-}
-
-/* やらないこと：13→15 */
-.noItem{
-  font-size: 15px;        /* ← 13px */
-  line-height: 1.9;
-}
-
-/* 下の誘導：13→15 */
-.pricingLink{
-  font-size: 15px;        /* ← 13px */
 }

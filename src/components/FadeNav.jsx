@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./FadeNav.module.css";
+
 const NAV = [
   { id: "works", label: "WORKS" },
   { id: "role", label: "ROLE" },
@@ -18,27 +19,34 @@ export default function FadeNav() {
   const [reduce, setReduce] = useState(false);
 
   // Hero / Footer が見えてる間は隠す
-  const [heroIn, setHeroIn] = useState(true);   // 初期はHero想定で隠す
+  const [heroIn, setHeroIn] = useState(true); // 初期はHero想定で隠す
   const [footerIn, setFooterIn] = useState(false);
 
   const [active, setActive] = useState("works");
 
   useEffect(() => setMounted(true), []);
 
-  // reduced motion
+  // reduced motion（フォールバック付き）
   useEffect(() => {
     const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     if (!m) return;
+
     const apply = () => setReduce(!!m.matches);
     apply();
-    m.addEventListener?.("change", apply);
-    return () => m.removeEventListener?.("change", apply);
+
+    if (m.addEventListener) m.addEventListener("change", apply);
+    else m.addListener?.(apply);
+
+    return () => {
+      if (m.removeEventListener) m.removeEventListener("change", apply);
+      else m.removeListener?.(apply);
+    };
   }, []);
 
   // show/hide by Hero + Footer visibility
   useEffect(() => {
     const hero = document.getElementById("top");
-    const footer = document.querySelector("footer"); // Footer.jsx が <footer> なのでこれで取れる
+    const footer = document.querySelector("footer");
 
     // Heroが無いなら「上では隠さない」扱い
     if (!hero) setHeroIn(false);
@@ -96,7 +104,13 @@ export default function FadeNav() {
   return createPortal(
     <nav className={cls} aria-label="ページ内ナビゲーション">
       <a className={styles.brand} href="#top" aria-label="トップへ">
-        <img className={styles.logo} src="/brand/auria6.svg" alt="" aria-hidden="true" draggable="false" />
+        <img
+          className={styles.logo}
+          src="/brand/auria6.svg"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
       </a>
 
       <div className={styles.links} role="list">
@@ -106,7 +120,7 @@ export default function FadeNav() {
             href={`#${n.id}`}
             className={[styles.link, active === n.id ? styles.active : ""].join(" ")}
             role="listitem"
-            aria-current={active === n.id ? "true" : undefined}
+            aria-current={active === n.id ? "location" : undefined}
           >
             {n.label}
           </a>

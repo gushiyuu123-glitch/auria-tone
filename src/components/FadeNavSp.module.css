@@ -1,0 +1,344 @@
+/* FadeNavSp.module.css */
+
+:root{
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+/* ---- dock button ---- */
+.dock{
+  position: fixed;
+  right: 14px;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px) scale(0.99);
+  transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+}
+
+.show{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.reduce{
+  transition: none !important;
+}
+
+.btn{
+  appearance: none;
+  border: none;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 999px;
+
+  /* ガラス“っぽさ”は禁止：薄い膜だけ */
+  background:
+    radial-gradient(240px 160px at 30% 30%, rgba(255,255,255,0.08), rgba(255,255,255,0) 68%),
+    linear-gradient(180deg, rgba(0,0,0,0.42), rgba(0,0,0,0.62));
+  border: 1px solid rgba(255,255,255,0.10);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  box-shadow:
+    0 14px 44px rgba(0,0,0,0.30),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+
+  color: rgba(246,243,238,0.86);
+}
+
+.btn:disabled{
+  opacity: 0.0;
+  pointer-events: none;
+}
+
+.btnLabel{
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.icon{
+  width: 18px;
+  height: 12px;
+  position: relative;
+  display: inline-block;
+  opacity: 0.92;
+}
+.icon::before,
+.icon::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:1px;
+  background: rgba(255,255,255,0.72);
+  transform-origin: center;
+  transition: transform 360ms var(--ease), top 360ms var(--ease), opacity 220ms ease;
+}
+.icon::before{ top: 2px; }
+.icon::after{ top: 9px; }
+
+/* open：ハンバーガー→X（静かに） */
+.open .icon::before{
+  top: 6px;
+  transform: rotate(45deg);
+}
+.open .icon::after{
+  top: 6px;
+  transform: rotate(-45deg);
+}
+
+.btn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.52), 0 14px 44px rgba(0,0,0,0.30);
+}
+
+/* ---- overlay ---- */
+.overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 520ms var(--ease);
+}
+
+.overlayOpen{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 背景：暗くしすぎず、下に沈める */
+.overlay::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(920px 640px at 50% 22%, rgba(255,255,255,0.06), rgba(255,255,255,0) 66%),
+    linear-gradient(180deg, rgba(0,0,0,0.44), rgba(0,0,0,0.84));
+  opacity: 0.92;
+}
+
+/* ---- panel ---- */
+.panel{
+  position: relative;
+  z-index: 1;
+
+  width: min(520px, calc(100% - 18px));
+  margin: calc(env(safe-area-inset-top, 0px) + 10px) auto 0;
+  border-radius: 18px;
+
+  background:
+    radial-gradient(760px 520px at 26% 18%, rgba(255,255,255,0.06), rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, rgba(14,14,14,0.78), rgba(6,6,6,0.92));
+  border: 1px solid rgba(255,255,255,0.10);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.46),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+
+  padding: 14px 14px 16px;
+
+  transform: translateY(10px) scale(0.99);
+  transition: transform 520ms var(--ease);
+}
+
+.overlayOpen .panel{
+  transform: translateY(0) scale(1);
+}
+
+.reduce .overlay,
+.reduce .panel,
+.reduce .dock{
+  transition: none !important;
+  transform: none !important;
+}
+
+/* top */
+.panelTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brand{
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.logo{
+  height: 18px;
+  width: auto;
+  opacity: 0.96;
+  filter: drop-shadow(0 1px 10px rgba(0,0,0,0.22));
+}
+
+/* close */
+.close{
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.closeX{
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+.closeX::before,
+.closeX::after{
+  content:"";
+  position:absolute;
+  inset: 0;
+  margin:auto;
+  height:1px;
+  background: rgba(246,243,238,0.78);
+  transform-origin:center;
+}
+.closeX::before{ transform: rotate(45deg); }
+.closeX::after{ transform: rotate(-45deg); }
+
+.close:focus-visible,
+.brand:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.52);
+}
+
+.rule{
+  height: 1px;
+  margin: 10px 6px 6px;
+  background: rgba(255,255,255,0.10);
+}
+
+/* nav list */
+.nav{ padding: 4px 2px 0; }
+
+.list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.item{
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.item:first-child{
+  border-top: none;
+}
+
+.link{
+  display: grid;
+  grid-template-columns: 40px 1fr 22px;
+  align-items: center;
+  column-gap: 10px;
+
+  text-decoration: none;
+  padding: 14px 10px;
+
+  color: rgba(246,243,238,0.76);
+  border-radius: 14px;
+
+  transition: color 220ms ease, background 220ms ease;
+}
+
+.no{
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  opacity: 0.42;
+  transform: translateY(-0.5px);
+}
+
+.words{
+  display: grid;
+  row-gap: 4px;
+}
+
+.en{
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  font-weight: 650;
+}
+
+.jp{
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  color: rgba(246,243,238,0.54);
+}
+
+.arrow{
+  justify-self: end;
+  opacity: 0.28;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+@media (hover:hover){
+  .link:hover{
+    background: rgba(255,255,255,0.06);
+    color: rgba(246,243,238,0.92);
+  }
+  .link:hover .arrow{
+    opacity: 0.52;
+    transform: translateX(1px);
+  }
+}
+
+/* active：線で勝つ（点禁止） */
+.active{
+  color: rgba(246,243,238,0.96);
+  background:
+    radial-gradient(540px 220px at 22% 50%, rgba(var(--c-rose, 232 120 150), 0.12), rgba(255,255,255,0) 62%),
+    rgba(255,255,255,0.04);
+  box-shadow: 0 0 0 1px rgba(var(--c-rose, 232 120 150), 0.18) inset;
+}
+.active .arrow{
+  opacity: 0.72;
+}
+.active .en{
+  text-shadow:
+    0 0 14px rgba(var(--c-rose, 232 120 150), 0.34);
+}
+
+.link:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.52);
+}
+
+/* foot */
+.foot{
+  margin: 12px 6px 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(246,243,238,0.44);
+  text-align: center;
+}
+
+/* coarse pointer：押しやすさ */
+@media (pointer: coarse){
+  .link{ padding: 16px 10px; }
+  .btn{ padding: 11px 12px; }
+}

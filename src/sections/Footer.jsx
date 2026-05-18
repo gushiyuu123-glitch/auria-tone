@@ -1,4 +1,5 @@
 // src/sections/Footer.jsx
+import RevealSection from "../components/RevealSection";
 import styles from "./Footer.module.css";
 
 const YEAR = new Date().getFullYear();
@@ -14,13 +15,16 @@ const NAV = [
   { id: "gallery", label: "GALLERY" },
   { id: "contact", label: "CONTACT" },
 ];
+
 export default function Footer() {
+  let i = 0;
+
   return (
-    <footer className={styles.footer} aria-label="フッター">
+    <RevealSection as="footer" className={styles.footer} aria-label="フッター">
       <div className={styles.wrap}>
         <div className={styles.top}>
           {/* left: brand */}
-          <div className={styles.brand}>
+          <div className={`${styles.brand} ${styles.stagger}`} style={{ "--i": i++ }}>
             <img
               className={styles.brandSvg}
               src="/brand/auria6.svg"
@@ -33,7 +37,11 @@ export default function Footer() {
           </div>
 
           {/* center: nav */}
-          <nav className={styles.nav} aria-label="ページ内ナビゲーション">
+          <nav
+            className={`${styles.nav} ${styles.stagger}`}
+            style={{ "--i": i++ }}
+            aria-label="ページ内ナビゲーション"
+          >
             {NAV.map((n) => (
               <a key={n.id} className={styles.navLink} href={`#${n.id}`}>
                 {n.label}
@@ -42,14 +50,14 @@ export default function Footer() {
           </nav>
 
           {/* right: top */}
-          <div className={styles.meta}>
+          <div className={`${styles.meta} ${styles.stagger}`} style={{ "--i": i++ }}>
             <a className={styles.topLink} href="#top" aria-label="ページ先頭へ">
               TOP <span className={styles.topArrow}>↑</span>
             </a>
           </div>
         </div>
 
-        <div className={styles.bottom}>
+        <div className={`${styles.bottom} ${styles.stagger}`} style={{ "--i": i++ }}>
           <p className={styles.copy}>© {YEAR} AURIA TONE</p>
 
           <p className={styles.credit}>
@@ -65,6 +73,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </RevealSection>
   );
 }

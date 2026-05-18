@@ -28,14 +28,20 @@
     0 18px 58px rgba(0,0,0,0.26),
     0 1px 0 rgba(255,255,255,0.06) inset;
 
-  transform: translateX(-50%) translateY(-10px) scale(0.995);
+  transform: translate3d(-50%, -10px, 0) scale(0.995);
   transform-origin: 50% 0%;
   opacity: 0;
   pointer-events: none;
 
+  /* 追加：ここだけで調整できるようにする */
+  --navDur: 600ms;
+  --navEase: cubic-bezier(.22,.61,.36,1);
+
+  /* 既存はそのまま */
+
   transition:
-    opacity 680ms cubic-bezier(.22,.61,.36,1),
-    transform 680ms cubic-bezier(.22,.61,.36,1);
+    opacity var(--navDur) var(--navEase),
+    transform var(--navDur) var(--navEase);
 }
 
 /* 縦の“紙面の気配”だけ */
@@ -58,7 +64,7 @@
 .show{
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: translate3d(-50%, 0, 0) scale(1);
 }
 
 /* reduce：動きは切るが “表示/非表示ルール” は守る */
@@ -100,7 +106,6 @@
   position: relative;
   text-decoration: none;
 
-  /* 押すUI：11は弱い → 12 */
   font-size: 12px;
   letter-spacing: 0.18em;
   white-space: nowrap;
@@ -108,7 +113,7 @@
 
   color: rgba(246,243,238,0.80);
 
-  /* 当たり判定を作る */
+  /* 当たり判定 */
   padding: 6px 3px 9px;
   outline: none;
 
@@ -127,7 +132,7 @@
   opacity: 0.55;
   transform: scaleX(0.70);
   transform-origin: left center;
-  transition: opacity 220ms ease, transform 560ms ease, background 360ms ease;
+  transition: opacity 220ms ease, transform 560ms ease, background 360ms ease, box-shadow 360ms ease, height 220ms ease;
   pointer-events:none;
 }
 
@@ -141,14 +146,23 @@
   }
 }
 
-/* active */
+/* active：確実に“光る”（線で強度） */
 .active{
-  color: rgba(246,243,238,0.96);
+  color: rgba(246,243,238,0.98);
+  text-shadow:
+    0 0 14px rgba(var(--c-rose, 232 120 150), 0.55),
+    0 0 34px rgba(var(--c-rose, 232 120 150), 0.28);
+  filter: drop-shadow(0 0 10px rgba(var(--c-rose, 232 120 150), 0.24));
 }
+
 .active::after{
-  background: rgba(var(--c-rose), 0.72);
-  opacity: 0.92;
+  height: 2px;
+  background: rgba(var(--c-rose, 232 120 150), 0.88);
+  opacity: 1;
   transform: scaleX(1);
+  box-shadow:
+    0 0 12px rgba(var(--c-rose, 232 120 150), 0.62),
+    0 0 26px rgba(var(--c-rose, 232 120 150), 0.28);
 }
 
 /* focus */
@@ -170,28 +184,9 @@
     gap: 8px 12px;
   }
 }
-/* active：確実に“光る”（ドット無し） */
-.active{
-  color: rgba(246,243,238,0.98);
 
-  /* 文字の発光 */
-  text-shadow:
-    0 0 14px rgba(var(--c-rose, 232 120 150), 0.55),
-    0 0 34px rgba(var(--c-rose, 232 120 150), 0.28);
-
-  /* リンク全体の薄い発光（これで「見えない」が消える） */
-  filter: drop-shadow(0 0 10px rgba(var(--c-rose, 232 120 150), 0.24));
-}
-
-/* 下線バーを“太くして発光”（点じゃない、線の強度） */
-.active::after{
-  height: 2px; /* ← 1px から太く */
-
-  background: rgba(var(--c-rose, 232 120 150), 0.88);
-  opacity: 1;
-  transform: scaleX(1);
-
-  box-shadow:
-    0 0 12px rgba(var(--c-rose, 232 120 150), 0.62),
-    0 0 26px rgba(var(--c-rose, 232 120 150), 0.28);
+/* coarse pointer（押しやすさ） */
+@media (pointer: coarse){
+  .link{ padding: 8px 4px 10px; }
+  .brand{ padding: 6px 12px 6px 8px; }
 }

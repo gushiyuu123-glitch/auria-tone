@@ -1,14 +1,12 @@
 .section{
-  padding-top: clamp(130px, 15vh, 220px);
-  padding-bottom: clamp(130px, 15vh, 220px);
+  padding-top: clamp(120px, 14vh, 190px);
+  padding-bottom: clamp(120px, 14vh, 200px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
   position: relative;
-
-  /* 行設計（必要なら） */
 }
 
-/* やりすぎない紙ノイズ（全体） */
+/* 紙ノイズ（やりすぎない） */
 .section::before{
   content:"";
   position:absolute;
@@ -16,21 +14,21 @@
   pointer-events:none;
   background:
     radial-gradient(900px 520px at 20% 12%,
-      rgba(255,255,255,0.58), rgba(255,255,255,0) 62%),
+      rgba(255,255,255,0.56), rgba(255,255,255,0) 62%),
     repeating-linear-gradient(0deg,
       rgba(20,20,20,0.010) 0 1px, rgba(20,20,20,0) 1px 11px);
-  opacity: 0.85;
+  opacity: 0.82;
 }
 
 .wrap{
-  width: min(1680px, 100%);
+  width: min(720px, 100%);
   margin: 0 auto;
-  padding: 0 clamp(18px, 3.4vw, 84px);
+  padding: 0 clamp(18px, 4.2vw, 26px);
   position: relative;
   z-index: 1;
 }
 
-/* reveal（統一：グローバル変数で制御） */
+/* reveal（統一） */
 .stagger{
   opacity: 0.001;
   transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
@@ -39,144 +37,137 @@
     transform var(--reveal-dur) var(--reveal-ease);
   transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
 }
-
 .section:not(:global(.reveal-in)) .stagger{ will-change: transform, opacity; }
 .section:global(.reveal-in) .stagger{ opacity: 1; transform: translateY(0) scale(1); will-change: auto; }
 .section:global(.reveal-reduce) .stagger{ transition:none; transition-delay:0ms; opacity:1; transform:none; will-change:auto; }
 
 /* head */
 .head{
-  text-align: center;
-  margin-bottom: clamp(28px, 3.8vh, 56px);
+  text-align: left;
+  padding-left: 14px;
+  margin-bottom: clamp(20px, 3.2vh, 34px);
+  position: relative;
+}
+.head::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:2px;
+  bottom:2px;
+  width:1px;
+  background: rgba(20,20,20,0.10);
 }
 
-/* sign は stagger直乗せなので opacity禁止 → filterでトーン */
+/* sign */
 .sign{
   display:block;
-  margin: 0 auto 18px;
-  width: clamp(190px, 26vw, 360px);
+  width: min(280px, 78vw);
   height:auto;
   filter: opacity(0.86);
 }
 
-/* title は opacity禁止 → color α */
 .title{
-  margin: 0;
-  font-size: clamp(22px, 2.2vw, 32px);
+  margin: 14px 0 0;
+  font-size: clamp(22px, 5.6vw, 30px);
   line-height: 1.38;
   letter-spacing: 0.02em;
   font-weight: 560;
   color: rgb(var(--c-charcoal, 20 20 20) / 0.88);
 }
 
-/* 読ませる：16 */
 .sub{
-  margin-top: 16px;
+  margin-top: 14px;
 }
 .subLine{
   margin: 0;
   font-size: 16px;
-  line-height: 2.0;
+  line-height: 1.95;
   letter-spacing: 0.03em;
-  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.70);
 }
 .subLine + .subLine{ margin-top: 10px; }
 
 /* stage */
 .stage{
   position: relative;
-  width: min(980px, 100%);
+  width: 100%;
   margin: 0 auto;
 }
 
-/* 背面の紙片 */
+/* 背面紙片 */
 .tapeA, .tapeB{
   position: absolute;
-  width: clamp(120px, 14vw, 190px);
-  height: clamp(220px, 22vw, 320px);
+  width: clamp(90px, 18vw, 150px);
+  height: clamp(160px, 30vw, 260px);
   background: rgba(20,20,20,0.06);
-  opacity: 0.20;
+  opacity: 0.18;
   filter: saturate(0.5);
 }
 .tapeA{
-  left: clamp(-40px, -3vw, -18px);
-  top: clamp(120px, 10vh, 170px);
+  left: clamp(-28px, -6vw, -14px);
+  top: clamp(86px, 10vh, 132px);
 }
 .tapeB{
-  right: clamp(-44px, -3vw, -20px);
-  top: clamp(90px, 8vh, 130px);
-  height: clamp(160px, 18vw, 260px);
+  right: clamp(-30px, -6vw, -16px);
+  top: clamp(62px, 7vh, 110px);
+  height: clamp(130px, 24vw, 210px);
 }
 
 /* main sheet */
 .sheet{
   position: relative;
-  background: rgba(255,255,255,0.46);
+  background: rgba(255,255,255,0.48);
   border: 1px solid rgba(20,20,20,0.10);
   box-shadow: 0 24px 80px rgba(0,0,0,0.05);
-  padding: clamp(32px, 4.6vh, 56px) clamp(26px, 3.2vw, 56px);
+  padding: clamp(22px, 3.6vh, 34px) clamp(18px, 4.2vw, 26px);
 }
 
-/* 角の罫線 */
+/* 角罫線 */
 .cornerTL, .cornerBR{
   position:absolute;
-  width: 60px;
-  height: 60px;
+  width: 54px;
+  height: 54px;
   pointer-events:none;
-  opacity: 0.55;
+  opacity: 0.52;
 }
 .cornerTL{
   left: -10px;
   top: -10px;
-  border-left: 1px solid rgba(20,20,20,0.24);
-  border-top: 1px solid rgba(20,20,20,0.24);
+  border-left: 1px solid rgba(20,20,20,0.22);
+  border-top: 1px solid rgba(20,20,20,0.22);
 }
 .cornerBR{
   right: -10px;
   bottom: -10px;
-  border-right: 1px solid rgba(20,20,20,0.24);
-  border-bottom: 1px solid rgba(20,20,20,0.24);
+  border-right: 1px solid rgba(20,20,20,0.22);
+  border-bottom: 1px solid rgba(20,20,20,0.22);
 }
 
 /* form */
 .form{
   display: grid;
-  row-gap: clamp(18px, 2.6vh, 26px);
+  row-gap: 18px;
 }
 
-/* rows: 左ラベル / 右入力 */
+/* rows（SPは1カラムで迷わせない） */
 .row{
   display: grid;
-  grid-template-columns: clamp(120px, 11vw, 160px) 1fr;
-  column-gap: clamp(18px, 2.4vw, 34px);
-  align-items: start;
+  grid-template-columns: 1fr;
+  row-gap: 10px;
 }
 .rowTall{ align-items: start; }
 
 .label{
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  opacity: 0.74;
-  padding-top: 10px;
+  font-size: 13px;
+  letter-spacing: 0.10em;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.70);
   white-space: nowrap;
 }
 
-/* field wrapper（input+hint） */
+/* field wrapper */
 .field{ display: grid; }
 
-.input{
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid rgba(20,20,20,0.18);
-  background: transparent;
-  padding: 10px 0 12px;
-  font-size: 16px;
-  letter-spacing: 0.03em;
-  color: rgba(20,20,20,0.78);
-  outline: none;
-}
-.input::placeholder{ color: rgba(20,20,20,0.38); }
-
+.input,
 .textarea{
   width: 100%;
   border: none;
@@ -184,24 +175,28 @@
   background: transparent;
   padding: 10px 0 12px;
   font-size: 16px;
-  line-height: 2.0;
   letter-spacing: 0.03em;
   color: rgba(20,20,20,0.78);
   outline: none;
+}
+
+.input::placeholder{ color: rgba(20,20,20,0.38); }
+.textarea{
+  line-height: 1.95;
   resize: vertical;
-  min-height: 140px;
+  min-height: 150px;
 }
 .textarea::placeholder{ color: rgba(20,20,20,0.36); }
 
 .hint{
   margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.8;
   letter-spacing: 0.03em;
-  opacity: 0.56;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.54);
 }
 
-/* focus：線だけ */
+/* focus：線だけ（静かに） */
 .input:focus,
 .textarea:focus{
   border-bottom-color: rgba(20,20,20,0.32);
@@ -209,41 +204,47 @@
 
 /* submit */
 .submitRow{
-  margin-top: clamp(8px, 1.4vh, 14px);
+  margin-top: 10px;
   display: flex;
   justify-content: center;
 }
 
 .button{
   border: 1px solid rgba(20,20,20,0.22);
-  background: transparent;
-  color: rgba(20,20,20,0.76);
-  padding: 14px 40px;
+  background: rgba(255,255,255,0.18);
+  color: rgba(20,20,20,0.80);
+  padding: 14px 34px;
   letter-spacing: 0.10em;
   font-size: 14px;
   cursor: pointer;
-  transition: opacity 240ms ease, border-color 240ms ease;
+  transition: opacity 220ms ease, border-color 220ms ease, background 220ms ease;
 }
+
 @media (hover:hover){
   .button:hover{
-    opacity: 0.92;
+    opacity: 0.94;
     border-color: rgba(20,20,20,0.30);
+    background: rgba(255,255,255,0.26);
   }
 }
+
 .button:focus-visible{
   outline: none;
   box-shadow: 0 0 0 1px rgba(var(--c-rose), 0.30);
+  border-radius: 12px;
 }
 
-/* bottom note（stagger直乗せなので opacity禁止 → color α） */
+/* note */
 .note{
-  margin: clamp(22px, 3.2vh, 44px) auto 0;
-  width: min(980px, 100%);
-  text-align: center;
-  font-size: 14px;
+  margin: clamp(18px, 3vh, 26px) auto 0;
+  text-align: left;
+  padding-left: 14px;
+  border-left: 1px solid rgba(20,20,20,0.10);
+
+  font-size: 13px;
   line-height: 1.9;
   letter-spacing: 0.03em;
-  color: rgb(var(--c-charcoal, 20 20 20) / 0.62);
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.58);
 }
 
 /* srOnly */
@@ -258,17 +259,4 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
-}
-
-/* SP */
-@media (max-width: 980px){
-  .row{
-    grid-template-columns: 1fr;
-    row-gap: 10px;
-  }
-  .label{ padding-top: 0; }
-  .cornerTL, .cornerBR{ opacity: 0.40; }
-
-  /* 16px化の分だけ少し締める */
-  .subLine{ line-height: 1.92; }
 }

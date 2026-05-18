@@ -1,8 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+// src/sections/Works.jsx
+import { useLayoutEffect, useRef, useState } from "react";
+import RevealSection from "../components/RevealSection";
 import styles from "./Works.module.css";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
 const WORKS = {
@@ -29,11 +31,9 @@ const WORKS = {
 function WorkImage({ src, alt, imgRef }) {
   const [ok, setOk] = useState(true);
   const [retry, setRetry] = useState(0);
-
   const resolvedSrc = retry > 0 ? `${src}?v=${retry}` : src;
 
   const onError = () => {
-    // 1回だけ再取得 → それでもダメなら“写真だけ”消して下地で逃がす
     setRetry((t) => {
       if (t < 1) return t + 1;
       setOk(false);
@@ -53,6 +53,7 @@ function WorkImage({ src, alt, imgRef }) {
         decoding="async"
         draggable="false"
         onError={onError}
+        onLoad={() => setOk(true)}
       />
     </div>
   );
@@ -60,48 +61,11 @@ function WorkImage({ src, alt, imgRef }) {
 
 export default function Works() {
   const rootRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [reduce, setReduce] = useState(false);
 
   // GSAPは「画像だけ」動かす（レイアウトは触らない）
   const aImgRef = useRef(null);
   const bImgRef = useRef(null);
   const mainImgRef = useRef(null);
-
-  useEffect(() => {
-    const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-
-    const apply = () => {
-      const r = !!m?.matches;
-      setReduce(r);
-      if (r) setInView(true);
-    };
-
-    apply();
-
-    const el = rootRef.current;
-    if (!m?.matches && el) {
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          setInView(true);
-          io.disconnect();
-        },
-        { threshold: 0.2, rootMargin: "-10% 0px -10% 0px" }
-      );
-
-      io.observe(el);
-
-      m?.addEventListener?.("change", apply);
-      return () => {
-        io.disconnect();
-        m?.removeEventListener?.("change", apply);
-      };
-    }
-
-    m?.addEventListener?.("change", apply);
-    return () => m?.removeEventListener?.("change", apply);
-  }, []);
 
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
@@ -131,7 +95,6 @@ export default function Works() {
       setBase(bImg);
       setBase(mainImg);
 
-      // 左2枚：微差で統一（同じルールの中で強弱）
       if (aImg) {
         gsap.to(aImg, {
           y: -10,
@@ -163,7 +126,6 @@ export default function Works() {
       }
 
       if (mainImg) {
-        // 主役：最初だけ少し寄って、スクロールで落ち着く
         gsap.fromTo(
           mainImg,
           { y: 16, scale: 1.035 },
@@ -186,19 +148,20 @@ export default function Works() {
     return () => ctx.revert();
   }, []);
 
-  const cls = useMemo(
-    () =>
-      [styles.section, inView ? styles.in : "", reduce ? styles.reduce : ""]
-        .filter(Boolean)
-        .join(" "),
-    [inView, reduce]
-  );
-
+  // 旧の “証拠の章” の間を保つため、mainだけ少し遅らせる（i=4）
   return (
-    <section ref={rootRef} id="works" className={cls} aria-labelledby="works-title">
+    <RevealSection
+      ref={rootRef}
+      id="works"
+      className={styles.section}
+      aria-labelledby="works-title"
+      data-reveal="slow"
+      threshold={0.2}
+      rootMargin="-10% 0px -10% 0px"
+    >
       <div className={styles.wrap}>
         <div className={styles.grid}>
-          <header className={styles.head}>
+          <header className={`${styles.head} ${styles.stagger}`} style={{ "--i": 0 }}>
             <div className={styles.kicker} aria-hidden="true">
               <span className={styles.kickerEn}>WORKS</span>
               <span className={styles.kickerDash}>—</span>
@@ -209,11 +172,10 @@ export default function Works() {
               代表作
             </h2>
 
-            {/* 反復を切る：WORKSは“証拠の章” */}
             <p className={styles.support}>仕上がりに、理由が残る。</p>
           </header>
 
-          <figure className={[styles.card, styles.cardA].join(" ")}>
+          <figure className={[styles.card, styles.cardA, styles.stagger].join(" ")} style={{ "--i": 1 }}>
             <WorkImage src={WORKS.a.img} alt={WORKS.a.alt} imgRef={aImgRef} />
             <figcaption className={styles.cap}>
               <span className={styles.capRule} aria-hidden="true" />
@@ -222,7 +184,7 @@ export default function Works() {
             </figcaption>
           </figure>
 
-          <figure className={[styles.card, styles.cardB].join(" ")}>
+          <figure className={[styles.card, styles.cardB, styles.stagger].join(" ")} style={{ "--i": 2 }}>
             <WorkImage src={WORKS.b.img} alt={WORKS.b.alt} imgRef={bImgRef} />
             <figcaption className={styles.cap}>
               <span className={styles.capRule} aria-hidden="true" />
@@ -231,7 +193,7 @@ export default function Works() {
             </figcaption>
           </figure>
 
-          <figure className={[styles.main, styles.cardMain].join(" ")}>
+          <figure className={[styles.main, styles.cardMain, styles.stagger].join(" ")} style={{ "--i": 4 }}>
             <WorkImage src={WORKS.main.img} alt={WORKS.main.alt} imgRef={mainImgRef} />
             <figcaption className={styles.capMain}>
               <span className={styles.capRule} aria-hidden="true" />
@@ -240,15 +202,13 @@ export default function Works() {
             </figcaption>
           </figure>
 
-          {/* ここは将来「作品一覧」ページができたら差し替える前提で“出口”だけ強くしておく */}
-          <a className={styles.more} href="#works" aria-label="作品一覧へ">
+          <a className={[styles.more, styles.stagger].join(" ")} style={{ "--i": 5 }} href="#works" aria-label="作品一覧へ">
             <span className={styles.moreRule} aria-hidden="true" />
             <span className={styles.moreText}>作品一覧へ</span>
-       
             <span className={styles.moreRule} aria-hidden="true" />
           </a>
         </div>
       </div>
-    </section>
+    </RevealSection>
   );
 }

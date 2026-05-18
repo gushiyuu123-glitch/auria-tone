@@ -1,6 +1,6 @@
 import { useState } from "react";
 import RevealSection from "../components/RevealSection";
-import styles from "./Gallery.module.css";
+import styles from "./GallerySp.module.css";
 
 const ITEMS = [
   { slot: "slotA", title: "Clinic Reception", desc: "受付まわりの明度と導線。第一印象のブレを抑える。", img: "/auria-gallery-01.png", alt: "クリニックの受付空間。" },
@@ -41,10 +41,10 @@ function SafeImage({ src, alt, className }) {
   );
 }
 
-export default function Gallery() {
+export default function () {
   return (
     <RevealSection
-      id="gallery"
+        id="gallery-sp"
       className={styles.section}
       aria-labelledby="gallery-title"
       data-reveal="slow"   /* ← この章だけ少し遅い */

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
+import RevealSection from "../components/RevealSection";
 import styles from "./Services.module.css";
 
 const SERVICES_IMG = "/auria-services.png";
@@ -6,8 +7,6 @@ const SERVICES_IMG = "/auria-services.png";
 const COPY = {
   kickerEn: "SERVICES",
   kickerJp: "できること",
-
-  // 「揃える」連打をやめて、動詞を立てる（改善案寄せ）
   title: "判断を先に固めると、印象はブレません。",
   lines: [
     "最初に決めるのは、デザインではありません。",
@@ -19,55 +18,9 @@ const COPY = {
 };
 
 export default function Services() {
-  const rootRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [reduce, setReduce] = useState(false);
-
   // 画像事故対策：1回だけ再取得 → だめなら写真だけ隠して下地へ
   const [imgOk, setImgOk] = useState(true);
   const [imgRetry, setImgRetry] = useState(0);
-
-  useEffect(() => {
-    const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-
-    const apply = () => {
-      const r = !!m?.matches;
-      setReduce(r);
-      if (r) setInView(true);
-    };
-
-    apply();
-
-    const el = rootRef.current;
-    let io;
-
-    if (!m?.matches && el) {
-      io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry.isIntersecting) return;
-          setInView(true);
-          io.disconnect();
-        },
-        { threshold: 0.22, rootMargin: "-12% 0px -12% 0px" }
-      );
-      io.observe(el);
-    }
-
-    m?.addEventListener?.("change", apply);
-
-    return () => {
-      io?.disconnect?.();
-      m?.removeEventListener?.("change", apply);
-    };
-  }, []);
-
-  const cls = useMemo(
-    () =>
-      [styles.section, inView ? styles.in : "", reduce ? styles.reduce : ""]
-        .filter(Boolean)
-        .join(" "),
-    [inView, reduce]
-  );
 
   const src = imgRetry > 0 ? `${SERVICES_IMG}?v=${imgRetry}` : SERVICES_IMG;
 
@@ -84,7 +37,7 @@ export default function Services() {
   let i = 0;
 
   return (
-    <section ref={rootRef} id="services" className={cls} aria-labelledby="services-title">
+    <RevealSection id="services" className={styles.section} aria-labelledby="services-title">
       <div className={styles.wrap}>
         <div className={styles.grid}>
           {/* left: text */}
@@ -98,10 +51,12 @@ export default function Services() {
             <h2 id="services-title" className={styles.srOnly}>
               できること
             </h2>
-<p className={`${styles.title} ${styles.stagger}`} style={{ "--i": i++ }}>
-  <span className={styles.titleLine}>判断を先に固めると、</span>
-  <span className={styles.titleLine}>印象はブレません。</span>
-</p>
+
+            <p className={`${styles.title} ${styles.stagger}`} style={{ "--i": i++ }}>
+              <span className={styles.titleLine}>判断を先に固めると、</span>
+              <span className={styles.titleLine}>印象はブレません。</span>
+            </p>
+
             <div className={styles.text}>
               {COPY.lines.map((t) => (
                 <p key={t} className={`${styles.line} ${styles.stagger}`} style={{ "--i": i++ }}>
@@ -136,6 +91,6 @@ export default function Services() {
           </aside>
         </div>
       </div>
-    </section>
+    </RevealSection>
   );
 }

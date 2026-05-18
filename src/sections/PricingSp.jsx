@@ -1,5 +1,5 @@
 import RevealSection from "../components/RevealSection";
-import styles from "./Pricing.module.css";
+import styles from "./PricingSp.module.css";
 
 const COPY = {
   title: "費用は、内容で決まります。",
@@ -22,16 +22,16 @@ const COPY = {
   cta: "初回相談で、必要な範囲だけ決めます。",
 };
 
-export default function Pricing() {
+export default function PricingSp() {
   let i = 0;
 
   return (
-    <RevealSection id="pricing" className={styles.section} aria-labelledby="pricing-title">
+    <RevealSection id="pricing-sp" className={styles.section} aria-labelledby="pricing-title-sp">
       <div className={styles.paper}>
         <div className={styles.wrap}>
-          <div className={styles.grid}>
-            {/* LEFT */}
-            <header className={styles.left}>
+          <div className={styles.inner}>
+            {/* head */}
+            <header className={styles.head}>
               <img
                 className={`${styles.signature} ${styles.stagger}`}
                 style={{ "--i": i++ }}
@@ -41,7 +41,7 @@ export default function Pricing() {
                 draggable="false"
               />
 
-              <h2 id="pricing-title" className={styles.srOnly}>
+              <h2 id="pricing-title-sp" className={styles.srOnly}>
                 料金
               </h2>
 
@@ -56,22 +56,10 @@ export default function Pricing() {
                   </p>
                 ))}
               </div>
-
-              <a
-                href="#contact"
-                className={`${styles.ctaInline} ${styles.stagger}`}
-                style={{ "--i": i++ }}
-                aria-label="初回相談へ"
-              >
-                <span className={styles.ctaText}>{COPY.cta}</span>
-                <span className={styles.arrow} aria-hidden="true">
-                  →
-                </span>
-              </a>
             </header>
 
-            {/* RIGHT */}
-            <aside className={styles.right} aria-label="料金の目安">
+            {/* ledger */}
+            <aside className={styles.ledger} aria-label="料金の目安">
               <dl className={styles.priceList}>
                 {COPY.prices.map((p) => (
                   <div key={p.label} className={`${styles.priceRow} ${styles.stagger}`} style={{ "--i": i++ }}>
@@ -88,6 +76,18 @@ export default function Pricing() {
                   </p>
                 ))}
               </div>
+
+              <a
+                href="#contact-sp"
+                className={`${styles.ctaInline} ${styles.stagger}`}
+                style={{ "--i": i++ }}
+                aria-label="初回相談へ"
+              >
+                <span className={styles.ctaText}>{COPY.cta}</span>
+                <span className={styles.arrow} aria-hidden="true">
+                  →
+                </span>
+              </a>
             </aside>
           </div>
         </div>

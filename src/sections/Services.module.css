@@ -5,11 +5,6 @@
   padding-bottom: clamp(110px, 14vh, 190px);
   background: transparent;
   color: rgb(var(--c-charcoal, 20 20 20));
-
-  /* Role/Promiseと統一 */
-  --dur: 820ms;
-  --stagger: 180ms;
-  --after: 120ms;
 }
 
 .wrap{
@@ -37,25 +32,30 @@
   margin-top: clamp(92px, 8.8vh, 220px);
 }
 
-/* ==== reveal（統一） ==== */
+/* ==== reveal（統一：グローバル変数で制御） ==== */
 .stagger{
   opacity: 0.001;
-  transform: translateY(12px) scale(0.995);
+  transform: translateY(var(--reveal-y)) scale(var(--reveal-scale));
   transition:
-    opacity var(--dur) cubic-bezier(.22,.61,.36,1),
-    transform var(--dur) cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(var(--after) + (var(--i) * var(--stagger)));
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-after) + (var(--i) * var(--reveal-stagger)));
 }
 
-.section:not(.in) .stagger{ will-change: transform, opacity; }
+/* まだ出てない時だけ will-change */
+.section:not(:global(.reveal-in)) .stagger{
+  will-change: transform, opacity;
+}
 
-.in .stagger{
+/* 出番 */
+.section:global(.reveal-in) .stagger{
   opacity: 1;
   transform: translateY(0) scale(1);
   will-change: auto;
 }
 
-.reduce .stagger{
+/* reduce */
+.section:global(.reveal-reduce) .stagger{
   transition: none;
   transition-delay: 0ms;
   opacity: 1;
@@ -85,16 +85,16 @@
   letter-spacing: 0.22em;
   font-weight: 610;
   font-size: 13px;
-  opacity: 0.72;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.72);
 }
 .kickerDash{
-  opacity: 0.30;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.30);
   transform: translateY(-0.5px);
 }
 .kickerJp{
   letter-spacing: 0.14em;
   font-size: 12px;
-  opacity: 0.68;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.68);
   transform: translateY(1px);
 }
 
@@ -105,19 +105,24 @@
   line-height: 1.28;
   letter-spacing: 0.02em;
   font-weight: 560;
-  opacity: 0.86;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.86);
   max-width: 26ch;
+}
+
+/* 2行の改行を“意図”として固定する */
+.titleLine{
+  display: block;
+  white-space: nowrap; /* PC/タブレットは必ずこの2行 */
 }
 
 .text{ margin-top: 18px; }
 
-/* 読ませる箇所：サイズを上げる（opacityはいじらない） */
 .line{
   margin: 0;
-  font-size: 16px;        /* ←重要：14→16 */
+  font-size: 16px;
   line-height: 2.0;
   letter-spacing: 0.03em;
-  opacity: 0.78;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.78);
   max-width: 64ch;
 }
 .line + .line{ margin-top: 14px; }
@@ -130,7 +135,7 @@
   margin-bottom: 12px;
   letter-spacing: 0.20em;
   font-size: 11px;
-  opacity: 0.44;
+  color: rgb(var(--c-charcoal, 20 20 20) / 0.44);
 }
 .tagText{ white-space: nowrap; }
 .tagRule{
@@ -155,7 +160,6 @@
   background: rgba(20,20,20,0.015);
 }
 
-/* 下地（画像が死んでも成立） */
 .imgFallback{
   position: absolute;
   inset: 0;
@@ -164,7 +168,6 @@
     linear-gradient(180deg, rgba(var(--c-bone), 0.55), rgba(var(--c-ivory), 0.96));
 }
 
-/* 膜（blur無し） */
 .frame::after{
   content:"";
   position:absolute;
@@ -231,17 +234,8 @@
     aspect-ratio: 16 / 10;
   }
 
-  /* 16pxに上げた分だけ、SPは少し締める */
   .line{ line-height: 1.92; }
-}
-/* 2行の改行を“意図”として固定する */
-.titleLine{
-  display: block;
-  white-space: nowrap; /* PC/タブレットは必ずこの2行 */
-}
 
-/* SPははみ出し防止で折り返し許可 */
-@media (max-width: 980px){
   .titleLine{
     white-space: normal;
   }
