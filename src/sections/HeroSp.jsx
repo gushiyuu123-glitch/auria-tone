@@ -14,7 +14,8 @@ const NAV = [
 ];
 
 const HERO_IMG = "/auria-hero5.jpeg";
-const COPY = { l1: "また来たくなる", l2: "空間を、設計する。" };
+// const COPY = { l1: "また来たくなる", l2: "空間を、設計する。" };
+const COPY = { l1: "仕上がりに、", l2: "根拠が残る。" };
 
 function clampActiveId(id) {
   if (!id) return "works-sp";

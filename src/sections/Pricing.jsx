@@ -64,9 +64,7 @@ export default function Pricing() {
                 aria-label="初回相談へ"
               >
                 <span className={styles.ctaText}>{COPY.cta}</span>
-                <span className={styles.arrow} aria-hidden="true">
-                  →
-                </span>
+         
               </a>
             </header>
 
